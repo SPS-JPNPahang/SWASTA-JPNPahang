@@ -244,53 +244,148 @@
 
             <!-- ========== BORANG AGENSI ========== -->
             <form id="form-agensi" class="form-category">
-              <h3><i class="fas fa-landmark"></i> Permohonan — Agensi</h3>
-              
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Kod Sekolah *</label>
-                  <input id="kodSekolah_a" class="form-control" placeholder="Contoh: CBA0001" />
-                </div>
+            <h3><i class="fas fa-landmark"></i> Permohonan — Lawatan Agensi</h3>
+  
+            <!-- Maklumat Sekolah -->
+            <div class="form-row">
+              <div class="form-group">
+              <label>Kod Sekolah *</label>
+              <input id="kodSekolah_a" class="form-control" placeholder="Contoh: CBA0001" />
               </div>
+            </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Nama Sekolah</label>
-                  <input id="namaSekolah_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
-                </div>
-              </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Nama Sekolah</label>
+      <input id="namaSekolah_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Nama Agensi *</label>
-                  <input id="namaAgensi_a" class="form-control" placeholder="Nama agensi / jabatan" />
-                </div>
-              </div>
+  <div class="form-row two-col">
+    <div class="form-group">
+      <label>Daerah</label>
+      <input id="daerah_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+    <div class="form-group">
+      <label>Peringkat</label>
+      <input id="peringkat_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Tujuan / Butiran *</label>
-                  <textarea id="butiranAgensi_a" class="form-control" rows="4" placeholder="Butiran ringkas"></textarea>
-                </div>
-              </div>
+  <div class="divider"></div>
+  <h4><i class="fas fa-building"></i> Maklumat Agensi/Jabatan</h4>
 
-              <div class="divider"></div>
-              <h4><i class="fas fa-user"></i> Maklumat Penghubung</h4>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Nama Jabatan/Agensi *</label>
+      <input id="namaJabatanAgensi_a" class="form-control" placeholder="Contoh: Jabatan Pendidikan Negeri Pahang" />
+    </div>
+  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Nama Penghubung *</label>
-                  <input id="namaPenghubung_a" class="form-control" placeholder="Nama pegawai / guru" />
-                </div>
-              </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Alamat Jabatan/Agensi Baris 1 *</label>
+      <input id="alamatBaris1_a" class="form-control" placeholder="Contoh: Tingkat 3, Bangunan PKPNP" />
+    </div>
+  </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label>Email Penghubung *</label>
-                  <input id="emailPenghubung_a" class="form-control" type="email" placeholder="email@example.com" />
-                </div>
-              </div>
-            </form>
+  <div class="form-row">
+    <div class="form-group">
+      <label>Alamat Jabatan/Agensi Baris 2 *</label>
+      <input id="alamatBaris2_a" class="form-control" placeholder="Contoh: Jalan Gambut" />
+    </div>
+  </div>
+
+  <div class="form-row two-col">
+    <div class="form-group">
+      <label>Poskod *</label>
+      <input id="poskod_a" class="form-control" placeholder="25000" />
+    </div>
+    <div class="form-group">
+      <label>Daerah Agensi *</label>
+      <input id="daerahAgensi_a" class="form-control" placeholder="Contoh: Kuantan" />
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h4><i class="fas fa-clipboard-list"></i> Maklumat Program/Lawatan</h4>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Tajuk Surat *</label>
+      <input id="tajukSurat_a" class="form-control" placeholder="Contoh: PERMOHONAN LAWATAN KE SEKOLAH" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Nama Program/Lawatan *</label>
+      <input id="namaProgram_a" class="form-control" placeholder="Contoh: Program Pemantauan Kualiti Pendidikan" />
+    </div>
+  </div>
+
+  <div class="form-row two-col">
+    <div class="form-group">
+      <label>Tarikh Program Mula *</label>
+      <input id="tarikhProgramMula_a" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+      <label>Hari Program Mula</label>
+      <input id="hariProgramMula_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+  </div>
+
+  <div class="form-row two-col">
+    <div class="form-group">
+      <label>Tarikh Program Tamat *</label>
+      <input id="tarikhProgramTamat_a" class="form-control" type="date" />
+    </div>
+    <div class="form-group">
+      <label>Hari Program Tamat</label>
+      <input id="hariProgramTamat_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Jawatan Ketua Sekolah *</label>
+      <select id="jawatanKetua_a" class="form-control">
+        <option value="">-- Pilih --</option>
+        <option value="PENGETUA">PENGETUA</option>
+        <option value="GURU BESAR">GURU BESAR</option>
+        <option values="PENGARAH">PENGARAH</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h4><i class="fas fa-user"></i> Maklumat Pemohon (Pegawai Agensi)</h4>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Nama Pemohon *</label>
+      <input id="namaPemohon_a" class="form-control" placeholder="Nama pegawai agensi" />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Jawatan Pemohon *</label>
+      <input id="jawatanPemohon_a" class="form-control" placeholder="Contoh: Pegawai Penyelaras Program" />
+    </div>
+  </div>
+
+  <div class="form-row two-col">
+    <div class="form-group">
+      <label>Email Pemohon *</label>
+      <input id="emailPemohon_a" class="form-control" type="email" placeholder="email@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Telefon Pemohon *</label>
+      <input id="telefonPemohon_a" class="form-control" placeholder="0123456789" />
+    </div>
+  </div>
+</form>
 
             <!-- ========== BAHAGIAN UPLOAD FAIL ========== -->
             <div class="divider"></div>
