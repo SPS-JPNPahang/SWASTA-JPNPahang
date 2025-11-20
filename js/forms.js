@@ -39,7 +39,22 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+// Auto-fill Hari Program untuk Agensi
+if (document.getElementById('tarikhProgramMula_a')) {
+  document.getElementById('tarikhProgramMula_a').addEventListener('change', function() {
+    const date = new Date(this.value);
+    const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+    document.getElementById('hariProgramMula_a').value = days[date.getDay()];
+  });
+}
 
+if (document.getElementById('tarikhProgramTamat_a')) {
+  document.getElementById('tarikhProgramTamat_a').addEventListener('change', function() {
+    const date = new Date(this.value);
+    const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+    document.getElementById('hariProgramTamat_a').value = days[date.getDay()];
+  });
+}
 /* ===== FORM SWITCHING ===== */
 function showFormFor(kategori) {
   // Hide all forms
@@ -283,11 +298,35 @@ function collectFormData(kategori) {
     data.emailPenghubung = document.getElementById('emailPenghubung_p').value.trim();
     
   } else if (kategori === 'Agensi') {
-    data.kodSekolah = norm(document.getElementById('kodSekolah_a').value);
-    data.namaAgensi = document.getElementById('namaAgensi_a').value.trim();
-    data.butiranAgensi = document.getElementById('butiranAgensi_a').value.trim();
-    data.namaPenghubung = document.getElementById('namaPenghubung_a').value.trim();
-    data.emailPenghubung = document.getElementById('emailPenghubung_a').value.trim();
+  data.kodSekolah = norm(document.getElementById('kodSekolah_a').value);
+  data.namaSekolah = document.getElementById('namaSekolah_a').value.trim();
+  data.daerah = document.getElementById('daerah_a').value.trim();
+  data.peringkat = document.getElementById('peringkat_a').value.trim();
+  
+  // Maklumat Agensi
+  data.namaJabatanAgensi = document.getElementById('namaJabatanAgensi_a').value.trim();
+  data.alamatBaris1 = document.getElementById('alamatBaris1_a').value.trim();
+  data.alamatBaris2 = document.getElementById('alamatBaris2_a').value.trim();
+  data.poskod = document.getElementById('poskod_a').value.trim();
+  data.daerahAgensi = document.getElementById('daerahAgensi_a').value.trim();
+  
+  // Maklumat Program
+  data.tajukSurat = document.getElementById('tajukSurat_a').value.trim();
+  data.namaProgram = document.getElementById('namaProgram_a').value.trim();
+  data.tarikhProgramMula = document.getElementById('tarikhProgramMula_a').value;
+  data.hariProgramMula = document.getElementById('hariProgramMula_a').value.trim();
+  data.tarikhProgramTamat = document.getElementById('tarikhProgramTamat_a').value;
+  data.hariProgramTamat = document.getElementById('hariProgramTamat_a').value.trim();
+  data.jawatanKetua = document.getElementById('jawatanKetua_a').value;
+  
+  // Maklumat Pemohon
+  data.namaPemohon = document.getElementById('namaPemohon_a').value.trim();
+  data.jawatanPemohon = document.getElementById('jawatanPemohon_a').value.trim();
+  data.emailPemohon = document.getElementById('emailPemohon_a').value.trim();
+  data.telefonPemohon = document.getElementById('telefonPemohon_a').value.trim();
+  
+  data.namaPenghubung = data.namaPemohon;
+  data.emailPenghubung = data.emailPemohon;
   }
   
   return data;
@@ -432,13 +471,35 @@ function clearForm(kategori) {
     document.getElementById('emailPenghubung_p').value = '';
     
   } else if (kategori === 'Agensi') {
-    document.getElementById('kodSekolah_a').value = '';
-    document.getElementById('namaSekolah_a').value = '';
-    document.getElementById('namaAgensi_a').value = '';
-    document.getElementById('butiranAgensi_a').value = '';
-    document.getElementById('namaPenghubung_a').value = '';
-    document.getElementById('emailPenghubung_a').value = '';
-  }
+  // Clear basic fields
+  const fields = [
+    'kodSekolah_a', 'namaSekolah_a', 'daerah_a', 'peringkat_a',
+    'namaJabatanAgensi_a', 'alamatBaris1_a', 'alamatBaris2_a', 
+    'poskod_a', 'daerahAgensi_a', 'tajukSurat_a', 'namaProgram_a',
+    'tarikhProgramMula_a', 'hariProgramMula_a', 
+    'tarikhProgramTamat_a', 'hariProgramTamat_a', 'jawatanKetua_a',
+    'namaPemohon_a', 'jawatanPemohon_a', 'emailPemohon_a', 'telefonPemohon_a'
+  ];
+  
+  fields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.value = '';
+  });
+  
+  // Clear files
+  const fileFields = ['fileSurat_a', 'fileBorang_a', 'fileCadangan_a'];
+  const previewFields = ['previewSurat_a', 'previewBorang_a', 'previewCadangan_a'];
+  
+  fileFields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.value = '';
+  });
+  
+  previewFields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.innerHTML = '';
+  });
+}
 }
 
 }); // End safeRun('kategori')
