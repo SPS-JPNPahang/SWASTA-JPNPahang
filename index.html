@@ -123,11 +123,11 @@
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>Tarikh Program *</label>
-                  <input id="tarikhProgram_k" class="form-control" type="date" />
+                  <input id="tarikhProgram_k" class="form-control" type="date" required />
                 </div>
                 <div class="form-group">
                   <label>Masa Program *</label>
-                  <input id="masaProgram_k" class="form-control" type="time" />
+                  <input id="masaProgram_k" class="form-control" type="time" required />
                 </div>
               </div>
 
@@ -403,8 +403,9 @@
 
             <!-- ========== BAHAGIAN UPLOAD FAIL ========== -->
             <div class="divider"></div>
-            <h3 style="color:#D4AF37; margin-top:30px;"><i class="fas fa-paperclip"></i> Muat Naik Dokumen (Opsional)</h3>
-            <p class="note">Anda boleh muat naik sehingga 3 fail PDF untuk permohonan anda.</p>
+            <h3 style="color:#D4AF37; margin-top:30px;"><i class="fas fa-paperclip"></i> Muat Naik Dokumen </h3>
+            <p class="note">Anda perlu muat naik sehingga 3 fail PDF untuk permohonan anda.</p>
+            <p class="note warning">⚠️ Saiz PDF maksimum 5MB sahaja.</p>
 
             <div class="file-upload-section">
               <label>1. Surat Permohonan (PDF)</label>
@@ -617,5 +618,6 @@
   <script src="js/download.js"></script>
 </body>
 </html>
+
 
 
