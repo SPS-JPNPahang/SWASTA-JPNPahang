@@ -298,19 +298,22 @@ function collectFormData(kategori) {
     data.emailPenghubung = document.getElementById('emailPenghubung_p').value.trim();
     
   } else if (kategori === 'Agensi') {
+  // Basic school info
   data.kodSekolah = norm(document.getElementById('kodSekolah_a').value);
-  data.namaSekolah = document.getElementById('namaSekolah_a').value.trim();
-  data.daerah = document.getElementById('daerah_a').value.trim();
-  data.peringkat = document.getElementById('peringkat_a').value.trim();
   
-  // Maklumat Agensi
+  // Pemohon (MUST BE FIRST - Column G-J)
+  data.namaPemohon = document.getElementById('namaPemohon_a').value.trim();
+  data.jawatanPemohon = document.getElementById('jawatanPemohon_a').value.trim();
+  data.emailPemohon = document.getElementById('emailPemohon_a').value.trim();
+  data.telefonPemohon = document.getElementById('telefonPemohon_a').value.trim();
+  
+  // Jabatan Agensi (Column K-N)
   data.namaJabatanAgensi = document.getElementById('namaJabatanAgensi_a').value.trim();
   data.alamatBaris1 = document.getElementById('alamatBaris1_a').value.trim();
   data.alamatBaris2 = document.getElementById('alamatBaris2_a').value.trim();
   data.poskod = document.getElementById('poskod_a').value.trim();
-  data.daerahAgensi = document.getElementById('daerahAgensi_a').value.trim();
   
-  // Maklumat Program
+  // Program (Column O-U)
   data.tajukSurat = document.getElementById('tajukSurat_a').value.trim();
   data.namaProgram = document.getElementById('namaProgram_a').value.trim();
   data.tarikhProgramMula = document.getElementById('tarikhProgramMula_a').value;
@@ -319,19 +322,10 @@ function collectFormData(kategori) {
   data.hariProgramTamat = document.getElementById('hariProgramTamat_a').value.trim();
   data.jawatanKetua = document.getElementById('jawatanKetua_a').value;
   
-  // Maklumat Pemohon
-  data.namaPemohon = document.getElementById('namaPemohon_a').value.trim();
-  data.jawatanPemohon = document.getElementById('jawatanPemohon_a').value.trim();
-  data.emailPemohon = document.getElementById('emailPemohon_a').value.trim();
-  data.telefonPemohon = document.getElementById('telefonPemohon_a').value.trim();
-  
-  data.namaPenghubung = data.namaPemohon;
-  data.emailPenghubung = data.emailPemohon;
-  
-  // Rujukan Surat (NEW)
+  // Rujukan Surat (Column AD-AE)
   data.noRujSuratPemohon = document.getElementById('noRujSuratPemohon_a').value.trim();
   data.tarikhSuratPemohon = document.getElementById('tarikhSuratPemohon_a').value;
-  }
+}
   
   return data;
 }
@@ -508,4 +502,5 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
