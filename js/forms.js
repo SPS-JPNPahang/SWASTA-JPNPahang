@@ -460,31 +460,33 @@ function clearForm(kategori) {
   document.getElementById('previewCadangan').classList.remove('show');
   
   if (kategori === 'Kenamaan') {
-    document.getElementById('kodSekolah_k').value = '';
-    document.getElementById('namaSekolah_k').value = '';
-    document.getElementById('daerah_k').value = '';
-    document.getElementById('peringkat_k').value = '';
-    document.getElementById('poskod_k').value = '';
-    document.getElementById('jawatanKetua_k').value = '';
-    document.getElementById('tarikhProgram_k').value = '';
-    document.getElementById('masaProgram_k').value = '';
-    document.getElementById('hariProgram_k').value = '';
-    document.getElementById('lokasi_k').value = '';
-    document.getElementById('namaProgram_k').value = '';
-    document.getElementById('namaPerasmi_k').value = '';
-    document.getElementById('jawatanPerasmi_k').value = '';
-    document.getElementById('namaPenghubung_k').value = '';
-    document.getElementById('emailPenghubung_k').value = '';
-    document.getElementById('telefonPenghubung_k').value = '';
+  const kenamaanFields = [
+    'kodSekolah_k', 'namaSekolah_k', 'daerah_k', 'peringkat_k',
+    'poskod_k', 'jawatanKetua_k', 'tarikhProgram_k', 'masaProgram_k',
+    'hariProgram_k', 'lokasi_k', 'namaProgram_k', 'namaPerasmi_k',
+    'jawatanPerasmi_k', 'namaPenghubung_k', 'emailPenghubung_k',
+    'telefonPenghubung_k'
+  ];
+  
+  kenamaanFields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.value = '';
+  });
     
   } else if (kategori === 'Premis') {
-    document.getElementById('kodSekolah_p').value = '';
-    document.getElementById('namaSekolah_p').value = '';
-    document.getElementById('pemilikPremis_p').value = '';
-    document.getElementById('alamatPremis_p').value = '';
-    document.getElementById('butiranPremis_p').value = '';
-    document.getElementById('namaPenghubung_p').value = '';
-    document.getElementById('emailPenghubung_p').value = '';
+  const premisFields = [
+    'kodSekolah_p', 'namaSekolah_p', 'daerah_p', 'peringkat_p',
+    'jawatanKetua_p', 'namaPemohon_p', 'alamatBaris1_p', 'alamatBaris2_p',
+    'poskod_p', 'negeri_p', 'tajukSurat_p', 'noRujSurat_p', 'tarikhSurat_p',
+    'namaFasiliti_p', 'tarikhLaksana_p', 'namaPenghubung_p', 
+    'emailPenghubung_p', 'telefonPenghubung_p'
+  ];
+  
+  premisFields.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.value = '';
+  });
+
     
   } else if (kategori === 'Agensi') {
   // Clear basic fields
@@ -520,6 +522,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
