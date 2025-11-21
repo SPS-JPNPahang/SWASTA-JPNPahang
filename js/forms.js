@@ -290,12 +290,30 @@ function collectFormData(kategori) {
     data.telefonPenghubung = document.getElementById('telefonPenghubung_k').value.trim();
     
   } else if (kategori === 'Premis') {
-    data.kodSekolah = norm(document.getElementById('kodSekolah_p').value);
-    data.pemilikPremis = document.getElementById('pemilikPremis_p').value.trim();
-    data.alamatPremis = document.getElementById('alamatPremis_p').value.trim();
-    data.butiranPremis = document.getElementById('butiranPremis_p').value.trim();
-    data.namaPenghubung = document.getElementById('namaPenghubung_p').value.trim();
-    data.emailPenghubung = document.getElementById('emailPenghubung_p').value.trim();
+  // Basic info
+  data.kodSekolah = norm(document.getElementById('kodSekolah_p').value);
+  
+  // School details
+  data.jawatanKetuaSekolah = document.getElementById('jawatanKetua_p').value;
+  
+  // Pemohon
+  data.namaPemohon = document.getElementById('namaPemohon_p').value.trim();
+  data.alamatBaris1 = document.getElementById('alamatBaris1_p').value.trim();
+  data.alamatBaris2 = document.getElementById('alamatBaris2_p').value.trim();
+  data.poskod = document.getElementById('poskod_p').value.trim();
+  data.negeri = document.getElementById('negeri_p').value.trim();
+  
+  // Permohonan details
+  data.tajukSurat = document.getElementById('tajukSurat_p').value.trim();
+  data.noRujSuratPemohon = document.getElementById('noRujSurat_p').value.trim();
+  data.tarikhSuratPemohon = document.getElementById('tarikhSurat_p').value;
+  data.namaFasiliti = document.getElementById('namaFasiliti_p').value;
+  data.tarikhProgramLaksana = document.getElementById('tarikhLaksana_p').value;
+  
+  // Penghubung
+  data.namaPenghubung = document.getElementById('namaPenghubung_p').value.trim();
+  data.emailPenghubung = document.getElementById('emailPenghubung_p').value.trim();
+  data.telefonPenghubung = document.getElementById('telefonPenghubung_p').value.trim();
     
   } else if (kategori === 'Agensi') {
   // Basic school info
@@ -502,6 +520,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
