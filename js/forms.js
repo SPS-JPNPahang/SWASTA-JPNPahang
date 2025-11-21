@@ -335,16 +335,16 @@ document.getElementById('btnSubmit').addEventListener('click', async () => {
   const kategori = kategoriEl.value;
   const data = collectFormData(kategori);
   
-  // Validation
-  if (!data.kodSekolah || !data.namaPenghubung || !data.emailPenghubung) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Maklumat Tidak Lengkap',
-      text: 'Sila lengkapkan Kod Sekolah, Nama Penghubung dan Email Penghubung.',
-      confirmButtonColor: '#D4AF37'
-    });
-    return;
-  }
+  // Basic validation - Kod Sekolah sahaja
+if (!data.kodSekolah) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Maklumat Tidak Lengkap',
+    text: 'Sila masukkan Kod Sekolah.',
+    confirmButtonColor: '#D4AF37'
+  });
+  return;
+}
   
   // Check files
   let files = [];
@@ -502,5 +502,6 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
