@@ -317,19 +317,28 @@ function collectFormData(kategori) {
   const data = { kategori: kategori };
   
   if (kategori === 'Kenamaan') {
-    data.kodSekolah = norm(document.getElementById('kodSekolah_k').value);
-    data.poskod = document.getElementById('poskod_k').value.trim();
-    data.jawatanKetua = document.getElementById('jawatanKetua_k').value;
-    data.tarikhProgram = document.getElementById('tarikhProgram_k').value;
-    data.masaProgram = document.getElementById('masaProgram_k').value;
-    data.hariProgram = document.getElementById('hariProgram_k').value;
-    data.lokasi = document.getElementById('lokasi_k').value.trim();
-    data.namaProgram = document.getElementById('namaProgram_k').value.trim();
+  data.kodSekolah = norm(document.getElementById('kodSekolah_k').value);
+  data.jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
+  data.poskod = document.getElementById('poskod_k').value.trim();
+  data.jawatanKetua = document.getElementById('jawatanKetua_k').value;
+  data.tarikhProgram = document.getElementById('tarikhProgram_k').value;
+  data.masaProgram = document.getElementById('masaProgram_k').value;
+  data.hariProgram = document.getElementById('hariProgram_k').value;
+  data.lokasi = document.getElementById('lokasi_k').value.trim();
+  data.namaProgram = document.getElementById('namaProgram_k').value.trim();
+  
+  // Conditional fields based on jenis
+  if (data.jenisKenamaan === 'Perasmi') {
     data.namaPerasmi = document.getElementById('namaPerasmi_k').value.trim();
     data.jawatanPerasmi = document.getElementById('jawatanPerasmi_k').value.trim();
-    data.namaPenghubung = document.getElementById('namaPenghubung_k').value.trim();
-    data.emailPenghubung = document.getElementById('emailPenghubung_k').value.trim();
-    data.telefonPenghubung = document.getElementById('telefonPenghubung_k').value.trim();
+  } else if (data.jenisKenamaan === 'Penceramah') {
+    data.namaPenceramah = document.getElementById('namaPenceramah_k').value.trim();
+    data.jawatanPenceramah = document.getElementById('jawatanPenceramah_k').value.trim();
+  }
+  
+  data.namaPenghubung = document.getElementById('namaPenghubung_k').value.trim();
+  data.emailPenghubung = document.getElementById('emailPenghubung_k').value.trim();
+  data.telefonPenghubung = document.getElementById('telefonPenghubung_k').value.trim();
     
   } else if (kategori === 'Premis') {
   // Basic info
@@ -501,12 +510,13 @@ function clearForm(kategori) {
   document.getElementById('previewCadangan').textContent = '';
   document.getElementById('previewCadangan').classList.remove('show');
   
-  if (kategori === 'Kenamaan') {
+ if (kategori === 'Kenamaan') {
   const kenamaanFields = [
     'kodSekolah_k', 'namaSekolah_k', 'daerah_k', 'peringkat_k',
-    'poskod_k', 'jawatanKetua_k', 'tarikhProgram_k', 'masaProgram_k',
-    'hariProgram_k', 'lokasi_k', 'namaProgram_k', 'namaPerasmi_k',
-    'jawatanPerasmi_k', 'namaPenghubung_k', 'emailPenghubung_k',
+    'jenisKenamaan_k', 'poskod_k', 'jawatanKetua_k', 'tarikhProgram_k', 
+    'masaProgram_k', 'hariProgram_k', 'lokasi_k', 'namaProgram_k', 
+    'namaPerasmi_k', 'jawatanPerasmi_k', 'namaPenceramah_k', 
+    'jawatanPenceramah_k', 'namaPenghubung_k', 'emailPenghubung_k',
     'telefonPenghubung_k'
   ];
   
@@ -514,6 +524,13 @@ function clearForm(kategori) {
     const element = document.getElementById(id);
     if (element) element.value = '';
   });
+  
+  // Hide conditional fields
+  const perasmiDiv = document.getElementById('perasmiFields_k');
+  const penceramahDiv = document.getElementById('penceramahFields_k');
+  if (perasmiDiv) perasmiDiv.style.display = 'none';
+  if (penceramahDiv) penceramahDiv.style.display = 'none';
+}
     
   } else if (kategori === 'Premis') {
   const premisFields = [
@@ -564,6 +581,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
