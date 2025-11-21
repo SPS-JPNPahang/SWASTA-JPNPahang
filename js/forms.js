@@ -327,6 +327,10 @@ function collectFormData(kategori) {
   
   data.namaPenghubung = data.namaPemohon;
   data.emailPenghubung = data.emailPemohon;
+  
+  // Rujukan Surat (NEW)
+  data.noRujSuratPemohon = document.getElementById('noRujSuratPemohon_a').value.trim();
+  data.tarikhSuratPemohon = document.getElementById('tarikhSuratPemohon_a').value;
   }
   
   return data;
@@ -504,3 +508,4 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
