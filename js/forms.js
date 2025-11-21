@@ -157,7 +157,7 @@ function wireAutofill(prefix) {
         const penceramahDiv = document.getElementById('penceramahFields_k');
         
         if (jenis === 'Perasmi') {
-          perasmiDiv.style.display = 'flex';
+          perasmiDiv.style.display = 'block';
           penceramahDiv.style.display = 'none';
           
           // Set required
@@ -172,7 +172,7 @@ function wireAutofill(prefix) {
           
         } else if (jenis === 'Penceramah') {
           perasmiDiv.style.display = 'none';
-          penceramahDiv.style.display = 'flex';
+          penceramahDiv.style.display = 'block';
           
           // Set required
           document.getElementById('namaPerasmi_k').required = false;
@@ -565,6 +565,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
