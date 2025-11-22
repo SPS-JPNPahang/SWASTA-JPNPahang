@@ -96,8 +96,16 @@ function displayResults(applications) {
     const status = String(app.Status || '').toLowerCase();
     const statusInfo = getStatusInfo(app.Status);
     
-    // Check for letter
+    // ⭐ FIXED: Check multiple possible field names
     const suratUrl = app.SuratKelulusan || app.SuratURL || '';
+    
+    // ⭐ DEBUG
+    console.log('=== DEBUG ===');
+    console.log('RequestID:', app.RequestID);
+    console.log('Status:', app.Status);
+    console.log('SuratKelulusan:', app.SuratKelulusan);
+    console.log('SuratURL:', app.SuratURL);
+    console.log('Final suratUrl:', suratUrl);
     
     html += `
       <div class="application-card">
@@ -150,7 +158,7 @@ function displayResults(applications) {
             </button>
           ` : ''}
           
-          ${(status === 'lulus' || status === 'tolak') && suratUrl ? `
+          ${suratUrl && suratUrl !== '' ? `
             <a href="${suratUrl}" target="_blank" class="btn-table" style="flex:1; background:#10B981; color:white; text-decoration:none;">
               <i class="fas fa-file-pdf"></i> Muat Turun Surat
             </a>
@@ -396,3 +404,4 @@ function fileToBase64(file) {
 }
 });
 });
+
