@@ -1220,3 +1220,22 @@ tbody td {
   width: 100%;
   max-width: 280px;
 }
+/* Download tab button styling */
+.btn-view {
+  background: #3B82F6;
+  color: white;
+}
+
+.btn-view:hover {
+  background: #2563EB;
+}
+
+.btn-download {
+  background: #10B981;
+  color: white;
+}
+
+.btn-download:hover {
+  background: #059669;
+}
+
