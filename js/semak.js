@@ -265,15 +265,134 @@ function showApplicationDetails(data) {
 }
 
 // Placeholder for resubmit (implement later with query fix)
-window.resubmitQuery = function(requestId) {
-  Swal.fire({
-    icon: 'info',
-    title: 'Fungsi Query',
-    text: 'Fungsi ini akan diaktifkan selepas sistem Query selesai.',
-    confirmButtonColor: '#D4AF37'
+window.resubmitQuery = async function(requestId) {
+  const { value: files } = await Swal.fire({
+    title: 'Kemaskini Dokumen Query',
+    html: `
+      <div style="text-align:left; padding:1rem;">
+        <p style="color:#EF4444; font-weight:600; margin-bottom:1rem;">
+          ⚠️ PENTING: Fail baru akan menggantikan fail lama sahaja!
+        </p>
+        <p style="margin-bottom:1rem; color:#666; font-size:0.9rem;">
+          Anda boleh pilih muat naik 1, 2, atau 3 fail. Hanya fail yang dimuat naik akan diganti.
+        </p>
+        
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
+          1. Surat Permohonan (PDF)
+        </label>
+        <input type="file" id="file_surat_query" accept=".pdf" class="swal2-file" style="width:100%; margin-bottom:1rem;">
+        
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
+          2. Borang Permohonan (PDF)
+        </label>
+        <input type="file" id="file_borang_query" accept=".pdf" class="swal2-file" style="width:100%; margin-bottom:1rem;">
+        
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
+          3. Kertas Cadangan (PDF)
+        </label>
+        <input type="file" id="file_cadangan_query" accept=".pdf" class="swal2-file" style="width:100%;">
+        
+        <p style="margin-top:1rem; font-size:0.85rem; color:#10B981;">
+          <i class="fas fa-info-circle"></i> Fail yang tidak dimuat naik akan kekal di Drive
+        </p>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Hantar Semula',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#3B82F6',
+    width: '600px',
+    preConfirm: () => {
+      const fileSurat = document.getElementById('file_surat_query').files[0];
+      const fileBorang = document.getElementById('file_borang_query').files[0];
+      const fileCadangan = document.getElementById('file_cadangan_query').files[0];
+      
+      // At least 1 file required
+      if (!fileSurat && !fileBorang && !fileCadangan) {
+        Swal.showValidationMessage('Sila muat naik sekurang-kurangnya 1 fail!');
+        return false;
+      }
+      
+      return { fileSurat, fileBorang, fileCadangan };
+    }
   });
+
+  if (!files) return;
+
+  Swal.fire({
+    title: 'Memproses...',
+    html: 'Memuat naik fail baru...<br><small>Sila tunggu</small>',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    const fileArray = [];
+    
+    // Convert files to base64
+    for (const [key, file] of Object.entries(files)) {
+      if (file) {
+        const base64 = await fileToBase64(file);
+        let type = '';
+        
+        if (key === 'fileSurat') type = 'surat';
+        else if (key === 'fileBorang') type = 'borang';
+        else if (key === 'fileCadangan') type = 'cadangan';
+        
+        fileArray.push({
+          name: file.name,
+          base64: base64,
+          mime: file.type,
+          type: type
+        });
+      }
+    }
+
+    const response = await fetch(GAS_POST, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'resubmitQuery',
+        requestId: requestId,
+        files: fileArray
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Berjaya!',
+        html: 'Permohonan telah dihantar semula.<br><small>Status kembali ke "Baru"</small>',
+        confirmButtonColor: '#D4AF37'
+      });
+      
+      // Refresh by clicking search button again
+      setTimeout(() => {
+        document.getElementById('btnSemakStatus').click();
+      }, 1500);
+      
+    } else {
+      Swal.fire('Ralat', result.message || 'Gagal menghantar semula', 'error');
+    }
+
+  } catch (error) {
+    Swal.fire('Ralat', 'Tidak dapat berhubung dengan server', 'error');
+    console.error(error);
+  }
 }
 
+// Helper function for file to base64 conversion
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 });
 });
-
