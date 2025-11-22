@@ -1,6 +1,7 @@
 /* ===== SEMAK.JS - SEMAK STATUS PERMOHONAN ===== */
 whenReady(() => {
   safeRun('btnSemakStatus', () => {
+const GAS_POST = 'https://script.google.com/macros/s/AKfycbwafWP1mQirWNqEQFoCNY7ISJI5BNqkQmfTx5ZD7nHaw2DfIxRjfvF0XB9MFdU2RJo4/exec';
 
 const btnSemakStatus = document.getElementById('btnSemakStatus');
 const semakKodSekolahInput = document.getElementById('semakKodSekolah');
@@ -404,4 +405,5 @@ function fileToBase64(file) {
 }
 });
 });
+
 
