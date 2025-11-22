@@ -115,7 +115,7 @@ function displayResults(applications) {
           </span>
         </div>
         
-        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin:1rem 0; padding:1rem 0; border-top:1px solid #E5E7EB; border-bottom:1px solid #E5E7EB;">
+       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin:1rem 0; padding:1rem 0; border-top:1px solid #E5E7EB; border-bottom:1px solid #E5E7EB;">
           <div>
             <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Kategori</p>
             <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.Kategori || '-'}</p>
@@ -124,13 +124,9 @@ function displayResults(applications) {
             <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Tarikh Hantar</p>
             <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${formatDate(app.TarikhHantar)}</p>
           </div>
-          <div>
+          <div style="grid-column: 1 / -1;">
             <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Kod Sekolah</p>
             <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.KodSekolah || '-'}</p>
-          </div>
-          <div>
-            <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Daerah</p>
-            <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.Daerah || '-'}</p>
           </div>
         </div>
         
@@ -280,3 +276,4 @@ window.resubmitQuery = function(requestId) {
 
 });
 });
+
