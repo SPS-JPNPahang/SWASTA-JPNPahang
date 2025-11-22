@@ -1,58 +1,68 @@
 /* ===== DOWNLOAD.JS - TAB MUAT TURUN ===== */
 whenReady(() => {
-  // ⭐ NO safeRun - just run immediately!
   
-  // ⭐ DOWNLOAD FILES - SPI (Surat Pekeliling Ikhtisas)
-  const DOWNLOAD_FILES = {
-    spi_bil3_2008: 'https://drive.google.com/uc?export=download&id=1HKcDYu8e-pE-kiXDwn6XMLxxb6ZKfG64',
-    spi_bil7_1991: 'https://drive.google.com/uc?export=download&id=1UUPH8zo4V123JQzu6xYj4_lWVKHqh8ZW',
-    spi_bil5_2018: 'https://drive.google.com/uc?export=download&id=1hTzryGiUoWzqGdiJEUeki85qVhQqw532',
-    spi_bil12_1988: 'https://drive.google.com/uc?export=download&id=1r8KjPw3B_a9ZAuLUAQPL4wEYLO6cLBeC'
+  // ⭐ FILE IDs
+  const FILE_IDS = {
+    spi_bil3_2008: '1HKcDYu8e-pE-kiXDwn6XMLxxb6ZKfG64',
+    spi_bil7_1991: '1UUPH8zo4V123JQzu6xYj4_lWVKHqh8ZW',
+    spi_bil5_2018: '1hTzryGiUoWzqGdiJEUeki85qVhQqw532',
+    spi_bil12_1988: '1r8KjPw3B_a9ZAuLUAQPL4wEYLO6cLBeC'
   };
 
-  // ⭐ DISPLAY NAMES (Short & Clear)
+  // ⭐ FILE INFO
   const FILE_INFO = {
-    spi_bil3_2008: {
-      title: 'SPI Bil. 3/2008',
-      desc: 'Kenamaan & Penggunaan Premis'
-    },
-    spi_bil7_1991: {
-      title: 'SPI Bil. 7/1991',
-      desc: 'Penggunaan Kemudahan Sekolah'
-    },
-    spi_bil5_2018: {
-      title: 'SPI Bil. 5/2018',
-      desc: 'Kebenaran Agensi Luar'
-    },
-    spi_bil12_1988: {
-      title: 'SPI Bil. 12/1988',
-      desc: 'Larangan Jualan'
-    }
+    spi_bil3_2008: { title: 'SPI Bil. 3/2008' },
+    spi_bil7_1991: { title: 'SPI Bil. 7/1991' },
+    spi_bil5_2018: { title: 'SPI Bil. 5/2018' },
+    spi_bil12_1988: { title: 'SPI Bil. 12/1988' }
   };
 
-  // ⭐ DOWNLOAD FUNCTION - Make it global!
-  window.downloadFile = function(type) {
-    console.log('📥 Download clicked:', type);
+  // ⭐ PREVIEW FUNCTION (Opens in browser)
+  window.viewFileOnline = function(type) {
+    const fileId = FILE_IDS[type];
     
-    const url = DOWNLOAD_FILES[type];
-    const info = FILE_INFO[type];
-    
-    if (!url) {
+    if (!fileId) {
       Swal.fire({
         icon: 'error',
         title: 'Fail Tidak Dijumpai',
-        text: 'Sila hubungi pejabat untuk mendapatkan salinan.',
+        confirmButtonColor: '#D4AF37'
+      });
+      return;
+    }
+    
+    // Open Google Drive preview
+    const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
+    window.open(viewUrl, '_blank');
+    
+    Swal.fire({
+      icon: 'info',
+      title: 'Membuka Pratonton',
+      text: 'Fail dibuka dalam tab baru',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
+
+  // ⭐ DOWNLOAD FUNCTION (Force download)
+  window.downloadFile = function(type) {
+    const fileId = FILE_IDS[type];
+    const info = FILE_INFO[type];
+    
+    if (!fileId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Fail Tidak Dijumpai',
         confirmButtonColor: '#D4AF37'
       });
       return;
     }
 
-    console.log('📂 Opening URL:', url);
-
-    // Open download link
-    window.open(url, '_blank');
+    // Force download URL
+    const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    window.open(downloadUrl, '_blank');
     
-    // Success notification
     Swal.fire({
       icon: 'success',
       title: 'Memuat Turun',
@@ -65,6 +75,6 @@ whenReady(() => {
     });
   }
 
-  console.log('✅ download.js loaded - downloadFile() is ready!');
+  console.log('✅ download.js loaded - Both functions ready!');
 
 }); // End whenReady
