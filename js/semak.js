@@ -7,20 +7,19 @@ const semakKodSekolahInput = document.getElementById('semakKodSekolah');
 const semakResultDiv = document.getElementById('semakResult');
 
 btnSemakStatus.addEventListener('click', async () => {
-  const kodSekolah = semakKodSekolahInput.value.trim().toUpperCase();
+  const searchValue = semakKodSekolahInput.value.trim().toUpperCase();
   
-  if (!kodSekolah) {
+  if (!searchValue) {
     Swal.fire({
       icon: 'warning',
-      title: 'Kod Sekolah Diperlukan',
-      text: 'Sila masukkan kod sekolah anda.',
+      title: 'Medan Kosong',
+      text: 'Sila masukkan Kod Sekolah atau Request ID',
       confirmButtonColor: '#D4AF37'
     });
     return;
   }
   
   try {
-    // Show loading
     Swal.fire({
       title: 'Mencari permohonan...',
       text: 'Sila tunggu sebentar',
@@ -30,20 +29,41 @@ btnSemakStatus.addEventListener('click', async () => {
       }
     });
     
-    // Fetch applications by school code
-    const url = buildGET('listBySchool', { kodSekolah: kodSekolah });
+    let url;
+    
+    // ⭐ DETECT: Request ID (ABC12345) or Kod Sekolah (PEA1234)
+    if (/^[A-Z]{3}\d{5}$/.test(searchValue)) {
+      // Request ID format: 3 letters + 5 numbers
+      url = buildGET('getRequest', { requestId: searchValue });
+    } else {
+      // Kod Sekolah
+      url = buildGET('listBySchool', { kodSekolah: searchValue });
+    }
+    
     const response = await fetch(url);
     const result = await response.json();
     
     Swal.close();
     
-    if (result && result.success && result.data && result.data.length > 0) {
-      displayResults(result.data);
+    if (result && result.success) {
+      // Handle both single result (getRequest) and array (listBySchool)
+      const apps = result.data ? (Array.isArray(result.data) ? result.data : [result.data]) : [];
+      
+      if (apps.length > 0) {
+        displayResults(apps);
+      } else {
+        semakResultDiv.innerHTML = `
+          <div class="content-card text-center" style="padding:3rem;">
+            <i class="fas fa-search" style="font-size:3rem; color:#D4AF37; margin-bottom:1rem;"></i>
+            <p style="color:#666; font-size:1.1rem;">Tiada permohonan ditemui</p>
+          </div>
+        `;
+      }
     } else {
       semakResultDiv.innerHTML = `
-        <div class="content-card text-center">
+        <div class="content-card text-center" style="padding:3rem;">
           <i class="fas fa-inbox" style="font-size:3rem; color:#ccc; margin-bottom:1rem;"></i>
-          <p style="color:#666;">Tiada permohonan ditemui untuk kod sekolah ini.</p>
+          <p style="color:#666;">Tiada permohonan ditemui untuk ${searchValue}</p>
         </div>
       `;
     }
@@ -66,64 +86,106 @@ function displayResults(applications) {
   }
 
   let html = `
-    <h3 style="margin-top:2rem; color:#D4AF37;">
-      <i class="fas fa-list"></i> Permohonan Anda (${applications.length})
+    <h3 style="margin-top:2rem; margin-bottom:1.5rem; color:#D4AF37;">
+      <i class="fas fa-list-check"></i> Permohonan Dijumpai: ${applications.length}
     </h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Request ID</th>
-          <th>Kategori</th>
-          <th>Tarikh</th>
-          <th>Status</th>
-          <th>Catatan/Surat</th>
-        </tr>
-      </thead>
-      <tbody>
   `;
 
+  // ⭐ CARD LAYOUT (prettier!)
   applications.forEach(app => {
     const status = String(app.Status || '').toLowerCase();
+    const statusInfo = getStatusInfo(app.Status);
     
-    // Link Surat atau Catatan Query
-    let actionCol = '-';
-    
-    // Check for SuratKelulusan or SuratURL
+    // Check for letter
     const suratUrl = app.SuratKelulusan || app.SuratURL || '';
     
-    if ((status === 'lulus' || status === 'tolak') && suratUrl) {
-      actionCol = `<a href="${suratUrl}" target="_blank" class="btn-table btn-view">
-        <i class="fas fa-file-pdf"></i> Surat
-      </a>`;
-    } else if (status === 'query') {
-      const catatan = app.Catatan || app.CatatanPegawai || '-';
-      actionCol = `<div style="max-width:200px; font-size:0.85rem; color:#F59E0B;">
-        ${catatan}
-      </div>`;
-    }
-
     html += `
-      <tr>
-        <td><strong>${app.RequestID}</strong></td>
-        <td>${app.Kategori}</td>
-        <td>${formatDate(app.TarikhHantar)}</td>
-        <td><span class="status-badge ${getStatusClass(app.Status)}">${app.Status}</span></td>
-        <td>${actionCol}</td>
-      </tr>
+      <div class="application-card">
+        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:1rem;">
+          <div>
+            <h4 style="margin:0; color:#000; font-size:1.2rem;">
+              <i class="fas fa-hashtag"></i> ${app.RequestID}
+            </h4>
+            <p style="margin:0.25rem 0 0 0; color:#666;">
+              ${app.NamaSekolah || 'N/A'}
+            </p>
+          </div>
+          <span class="status-badge ${statusInfo.class}">
+            <i class="${statusInfo.icon}"></i> ${app.Status || 'Baru'}
+          </span>
+        </div>
+        
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin:1rem 0; padding:1rem 0; border-top:1px solid #E5E7EB; border-bottom:1px solid #E5E7EB;">
+          <div>
+            <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Kategori</p>
+            <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.Kategori || '-'}</p>
+          </div>
+          <div>
+            <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Tarikh Hantar</p>
+            <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${formatDate(app.TarikhHantar)}</p>
+          </div>
+          <div>
+            <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Kod Sekolah</p>
+            <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.KodSekolah || '-'}</p>
+          </div>
+          <div>
+            <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Daerah</p>
+            <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.Daerah || '-'}</p>
+          </div>
+        </div>
+        
+        ${app.CatatanPegawai ? `
+          <div style="background:#FEF3C7; border-left:3px solid #F59E0B; padding:1rem; border-radius:4px; margin:1rem 0;">
+            <p style="margin:0; font-size:0.85rem; color:#92400E;">
+              <i class="fas fa-comment-dots"></i> <strong>Catatan Pegawai:</strong><br>
+              ${app.CatatanPegawai}
+            </p>
+          </div>
+        ` : ''}
+        
+        <div style="display:flex; gap:0.75rem; margin-top:1rem;">
+          <button onclick="viewApplication('${app.RequestID}')" class="btn-table btn-view" style="flex:1;">
+            <i class="fas fa-eye"></i> Lihat Detail
+          </button>
+          
+          ${status === 'query' ? `
+            <button onclick="resubmitQuery('${app.RequestID}')" class="btn-table btn-primary" style="flex:1; background:#3B82F6; color:white;">
+              <i class="fas fa-upload"></i> Hantar Semula
+            </button>
+          ` : ''}
+          
+          ${(status === 'lulus' || status === 'tolak') && suratUrl ? `
+            <a href="${suratUrl}" target="_blank" class="btn-table" style="flex:1; background:#10B981; color:white; text-decoration:none;">
+              <i class="fas fa-file-pdf"></i> Muat Turun Surat
+            </a>
+          ` : ''}
+        </div>
+      </div>
     `;
   });
 
-  html += '</tbody></table>';
   semakResultDiv.innerHTML = html;
+}
+
+function getStatusInfo(status) {
+  const statusMap = {
+    'Baru': { class: 'baru', icon: 'fas fa-paper-plane' },
+    'Query': { class: 'query', icon: 'fas fa-question-circle' },
+    'Disahkan': { class: 'disahkan', icon: 'fas fa-check-circle' },
+    'Lulus': { class: 'lulus', icon: 'fas fa-check-double' },
+    'Ditolak': { class: 'tolak', icon: 'fas fa-times-circle' },
+    'Tolak': { class: 'tolak', icon: 'fas fa-times-circle' }
+  };
+  return statusMap[status] || statusMap['Baru'];
 }
 
 function getStatusClass(status) {
   const statusMap = {
     'Baru': 'baru',
-    'Sedang Diproses': 'sedang-diproses',
     'Query': 'query',
     'Disahkan': 'disahkan',
     'Lulus': 'lulus',
+    'Ditolak': 'tolak',
     'Tolak': 'tolak'
   };
   return statusMap[status] || 'baru';
@@ -139,7 +201,7 @@ function formatDate(dateStr) {
 }
 
 // View application details
-async function viewApplication(requestId) {
+window.viewApplication = async function(requestId) {
   try {
     Swal.fire({
       title: 'Memuatkan maklumat...',
@@ -176,21 +238,20 @@ async function viewApplication(requestId) {
 }
 
 function showApplicationDetails(data) {
-  let html = '<div style="text-align:left;">';
-  html += '<h3 style="color:#D4AF37; margin-bottom:1rem;">Maklumat Permohonan</h3>';
+  let html = '<div style="text-align:left; max-height:500px; overflow-y:auto;">';
+  html += '<h3 style="color:#D4AF37; margin-bottom:1rem;">Maklumat Lengkap</h3>';
   html += '<table style="width:100%; border-collapse:collapse;">';
   
-  // Display all fields
   Object.keys(data).forEach(key => {
     if (key.startsWith('File_') && data[key]) {
       html += '<tr style="border-bottom:1px solid #eee;">';
-      html += '<td style="padding:0.5rem; font-weight:600;">' + key + '</td>';
-      html += '<td style="padding:0.5rem;"><a href="' + data[key] + '" target="_blank" style="color:#3B82F6;">Lihat Fail</a></td>';
+      html += '<td style="padding:0.75rem; font-weight:600; width:40%;">' + key.replace('File_', '') + '</td>';
+      html += '<td style="padding:0.75rem;"><a href="' + data[key] + '" target="_blank" style="color:#3B82F6;"><i class="fas fa-external-link-alt"></i> Buka Fail</a></td>';
       html += '</tr>';
-    } else if (data[key]) {
+    } else if (data[key] && !key.includes('URL') && key !== 'SuratKelulusan') {
       html += '<tr style="border-bottom:1px solid #eee;">';
-      html += '<td style="padding:0.5rem; font-weight:600; width:40%;">' + key + '</td>';
-      html += '<td style="padding:0.5rem;">' + data[key] + '</td>';
+      html += '<td style="padding:0.75rem; font-weight:600; width:40%; color:#666;">' + key + '</td>';
+      html += '<td style="padding:0.75rem; color:#374151;">' + data[key] + '</td>';
       html += '</tr>';
     }
   });
@@ -201,10 +262,21 @@ function showApplicationDetails(data) {
   Swal.fire({
     title: 'Request ID: ' + data.RequestID,
     html: html,
-    width: '800px',
+    width: '900px',
     confirmButtonColor: '#D4AF37',
     confirmButtonText: 'Tutup'
   });
 }
+
+// Placeholder for resubmit (implement later with query fix)
+window.resubmitQuery = function(requestId) {
+  Swal.fire({
+    icon: 'info',
+    title: 'Fungsi Query',
+    text: 'Fungsi ini akan diaktifkan selepas sistem Query selesai.',
+    confirmButtonColor: '#D4AF37'
+  });
+}
+
 });
 });
