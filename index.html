@@ -673,63 +673,92 @@
     </div>
 
     <!--======================TAB 4 : MUAT TURUN================-->
-    <!-- Selepas tab-query -->
-    <div id="tab-download" class="tab-content">
-      <div class="content-card">
-        <h2><i class="fas fa-download"></i> Muat Turun Bahan</h2>
-        <p class="note">Borang dan dokumen berkaitan permohonan.</p>
+  <div id="tab-download" class="tab-content">
+  <div class="content-card">
+    <h2><i class="fas fa-download"></i> Muat Turun Bahan</h2>
+    <p class="note">
+      <i class="fas fa-info-circle"></i> 
+      Surat Pekeliling Ikhtisas (SPI) berkaitan Permohonan Kenamaan, Premis, dan Agensi.
+    </p>
 
-        <div class="download-grid">
-          <!-- Kenamaan -->
-          <div class="download-card">
-          <div class="download-icon">
+    <!-- DOWNLOAD CARDS -->
+    <div class="download-grid">
+      
+      <!-- Card 1: SPI 3/2008 -->
+      <div class="download-card">
+        <div class="download-icon kenamaan">
           <i class="fas fa-award"></i>
-          </div>
-          <h3>Kenamaan</h3>
-          <p>Borang permohonan kenamaan program/majlis</p>
-          <button class="btn-primary" onclick="downloadFile('kenamaan')">
-          <i class="fas fa-file-pdf"></i> Muat Turun PDF
+        </div>
+        <h4>SPI Bil. 3/2008</h4>
+        <p class="card-desc">Kenamaan & Penggunaan Premis</p>
+        <p class="card-subtitle">Mengundang Orang Kenamaan & Penggunaan Premis Oleh Pihak Luar</p>
+        <div class="card-actions">
+          <button class="btn-download" onclick="downloadFile('spi_bil3_2008')">
+            <i class="fas fa-download"></i> Muat Turun
           </button>
         </div>
+      </div>
 
-          <!-- Premis -->
-        <div class="download-card">
-        <div class="download-icon">
+      <!-- Card 2: SPI 7/1991 -->
+      <div class="download-card">
+        <div class="download-icon premis">
           <i class="fas fa-building"></i>
         </div>
-          <h3>Premis</h3>
-          <p>Borang permohonan penggunaan premis</p>
-          <button class="btn-primary" onclick="downloadFile('premis')">
-          <i class="fas fa-file-pdf"></i> Muat Turun PDF
+        <h4>SPI Bil. 7/1991</h4>
+        <p class="card-desc">Penggunaan Kemudahan Sekolah</p>
+        <p class="card-subtitle">Penggunaan Kemudahan Sekolah Oleh Pertubuhan & Persatuan Belia</p>
+        <div class="card-actions">
+          <button class="btn-download" onclick="downloadFile('spi_bil7_1991')">
+            <i class="fas fa-download"></i> Muat Turun
           </button>
         </div>
+      </div>
 
-          <!-- Agensi -->
-        <div class="download-card">
-        <div class="download-icon">
+      <!-- Card 3: SPI 5/2018 -->
+      <div class="download-card">
+        <div class="download-icon agensi">
           <i class="fas fa-landmark"></i>
         </div>
-          <h3>Agensi</h3>
-          <p>Borang permohonan lawatan agensi</p>
-        <button class="btn-primary" onclick="downloadFile('agensi')">
-          <i class="fas fa-file-pdf"></i> Muat Turun PDF
-        </button>
-        </div>
-
-          <!-- Panduan -->
-        <div class="download-card">
-        <div class="download-icon">
-          <i class="fas fa-book"></i>
-        </div>
-          <h3>Panduan Pengguna</h3>
-          <p>Panduan lengkap penggunaan sistem</p>
-        <button class="btn-primary" onclick="downloadFile('panduan')">
-          <i class="fas fa-file-pdf"></i> Muat Turun PDF
-        </button>
+        <h4>SPI Bil. 5/2018</h4>
+        <p class="card-desc">Kebenaran Agensi Luar</p>
+        <p class="card-subtitle">Panduan Kebenaran Agensi Luar Untuk Program Di Sekolah</p>
+        <div class="card-actions">
+          <button class="btn-download" onclick="downloadFile('spi_bil5_2018')">
+            <i class="fas fa-download"></i> Muat Turun
+          </button>
         </div>
       </div>
+
+      <!-- Card 4: SPI 12/1988 -->
+      <div class="download-card">
+        <div class="download-icon larangan">
+          <i class="fas fa-ban"></i>
+        </div>
+        <h4>SPI Bil. 12/1988</h4>
+        <p class="card-desc">Larangan Jualan</p>
+        <p class="card-subtitle">Larangan Jualan Barangan & Perkhidmatan Di Sekolah</p>
+        <div class="card-actions">
+          <button class="btn-download" onclick="downloadFile('spi_bil12_1988')">
+            <i class="fas fa-download"></i> Muat Turun
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONTACT BOX -->
+    <div class="contact-box" style="margin-top: 3rem;">
+      <h4><i class="fas fa-phone-alt"></i> Bantuan/Pertanyaan</h4>
+      <p>Untuk sebarang pertanyaan atau bantuan, sila hubungi:</p>
+      <div class="contact-details">
+        <p><i class="fas fa-building"></i> <strong>09-5715700</strong></p>
+        <p><i class="fas fa-map-marker-alt"></i>Unit Swasta, Sektor Pengurusan Sekolah</p>
+        <p><i class="fas fa-map-marker-alt"></i> Jabatan Pendidikan Negeri Pahang</p>
       </div>
     </div>
+
+  </div>
+</div>
 
   </div>
 
@@ -751,6 +780,7 @@
   <script src="js/download.js"></script>
 </body>
 </html>
+
 
 
 
