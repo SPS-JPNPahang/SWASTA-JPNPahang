@@ -67,21 +67,7 @@ window.downloadFile = function(type) {
     timer: 3000,
     timerProgressBar: true
   });
-}
-
-// ⭐ VIEW ONLINE FUNCTION
-window.viewFileOnline = function(type) {
-  const url = DOWNLOAD_FILES[type];
-  
-  if (!url) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Fail Tidak Dijumpai',
-      confirmButtonColor: '#D4AF37'
-    });
-    return;
-  }
-  
+}  
   // Convert to view link
   const fileId = url.split('id=')[1];
   const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
@@ -90,3 +76,4 @@ window.viewFileOnline = function(type) {
 
   }); // End safeRun
 }); // End whenReady
+
