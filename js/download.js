@@ -67,13 +67,9 @@ window.downloadFile = function(type) {
     timer: 3000,
     timerProgressBar: true
   });
-}  
-  // Convert to view link
-  const fileId = url.split('id=')[1];
-  const viewUrl = `https://drive.google.com/file/d/${fileId}/view`;
-  window.open(viewUrl, '_blank');
 }
 
   }); // End safeRun
 }); // End whenReady
+
 
