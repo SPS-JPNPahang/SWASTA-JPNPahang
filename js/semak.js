@@ -1,12 +1,12 @@
 /* ===== SEMAK.JS - SEMAK STATUS PERMOHONAN ===== */
 whenReady(() => {
   safeRun('btnSemakStatus', () => {
-const GAS_POST = 'https://script.google.com/macros/s/AKfycbwafWP1mQirWNqEQFoCNY7ISJI5BNqkQmfTx5ZD7nHaw2DfIxRjfvF0XB9MFdU2RJo4/exec';
 
 const btnSemakStatus = document.getElementById('btnSemakStatus');
 const semakKodSekolahInput = document.getElementById('semakKodSekolah');
 const semakResultDiv = document.getElementById('semakResult');
 
+/* ========================= SEARCH HANDLER ========================= */
 btnSemakStatus.addEventListener('click', async () => {
   const searchValue = semakKodSekolahInput.value.trim().toUpperCase();
   
@@ -80,6 +80,7 @@ btnSemakStatus.addEventListener('click', async () => {
   }
 });
 
+/* ========================= DISPLAY RESULTS ========================= */
 function displayResults(applications) {
   if (applications.length === 0) {
     semakResultDiv.innerHTML = '<p class="no-data">Tiada permohonan dijumpai.</p>';
@@ -92,21 +93,13 @@ function displayResults(applications) {
     </h3>
   `;
 
-  // ⭐ CARD LAYOUT (prettier!)
+  // ⭐ CARD LAYOUT
   applications.forEach(app => {
     const status = String(app.Status || '').toLowerCase();
     const statusInfo = getStatusInfo(app.Status);
     
-    // ⭐ FIXED: Check multiple possible field names
+    // Check for letter URL
     const suratUrl = app.SuratKelulusan || app.SuratURL || '';
-    
-    // ⭐ DEBUG
-    console.log('=== DEBUG ===');
-    console.log('RequestID:', app.RequestID);
-    console.log('Status:', app.Status);
-    console.log('SuratKelulusan:', app.SuratKelulusan);
-    console.log('SuratURL:', app.SuratURL);
-    console.log('Final suratUrl:', suratUrl);
     
     html += `
       <div class="application-card">
@@ -124,7 +117,7 @@ function displayResults(applications) {
           </span>
         </div>
         
-       <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin:1rem 0; padding:1rem 0; border-top:1px solid #E5E7EB; border-bottom:1px solid #E5E7EB;">
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; margin:1rem 0; padding:1rem 0; border-top:1px solid #E5E7EB; border-bottom:1px solid #E5E7EB;">
           <div>
             <p style="margin:0; font-size:0.8rem; color:#9CA3AF; text-transform:uppercase;">Kategori</p>
             <p style="margin:0.25rem 0 0 0; font-weight:600; color:#374151;">${app.Kategori || '-'}</p>
@@ -139,7 +132,42 @@ function displayResults(applications) {
           </div>
         </div>
         
-        ${app.CatatanPegawai ? `
+        ${status === 'query' ? `
+          <div style="background:#FEF3C7; border-left:4px solid #F59E0B; padding:1.25rem; border-radius:6px; margin:1rem 0;">
+            <p style="margin:0 0 0.75rem 0; font-weight:700; color:#92400E; font-size:1rem;">
+              <i class="fas fa-exclamation-triangle"></i> Tindakan Diperlukan
+            </p>
+            
+            ${app.CatatanPegawai ? `
+              <div style="background:#FFF; padding:0.875rem; border-radius:4px; margin-bottom:0.875rem; border:1px solid #FDE68A;">
+                <p style="margin:0 0 0.375rem 0; font-size:0.75rem; color:#78350F; text-transform:uppercase; font-weight:600; letter-spacing:0.5px;">
+                  Catatan Pegawai:
+                </p>
+                <p style="margin:0; font-size:0.925rem; color:#1F2937; line-height:1.5;">
+                  ${app.CatatanPegawai}
+                </p>
+              </div>
+            ` : ''}
+            
+            <div style="background:#FFFBEB; padding:0.875rem; border-radius:4px; margin-bottom:0.875rem; border:1px solid #FDE68A;">
+              <p style="margin:0 0 0.5rem 0; font-size:0.875rem; color:#78350F; font-weight:600;">
+                <i class="fas fa-arrow-right"></i> Langkah seterusnya:
+              </p>
+              <ol style="margin:0; padding-left:1.25rem; color:#78350F; font-size:0.875rem; line-height:1.6;">
+                <li>Pergi ke tab <strong>QUERY</strong></li>
+                <li>Masukkan <strong>Request ID</strong> atau <strong>Kod Sekolah</strong></li>
+                <li>Muat naik dokumen yang telah dikemaskini</li>
+              </ol>
+            </div>
+            
+            <div style="display:flex; align-items:start; gap:0.5rem; font-size:0.8125rem; color:#92400E; background:#FEF3C7; padding:0.625rem; border-radius:4px;">
+              <i class="fas fa-envelope" style="margin-top:0.125rem; flex-shrink:0;"></i>
+              <span>Maklumat lengkap telah dihantar ke email. Sila semak folder spam jika perlu.</span>
+            </div>
+          </div>
+        ` : ''}
+        
+        ${app.CatatanPegawai && status !== 'query' ? `
           <div style="background:#FEF3C7; border-left:3px solid #F59E0B; padding:1rem; border-radius:4px; margin:1rem 0;">
             <p style="margin:0; font-size:0.85rem; color:#92400E;">
               <i class="fas fa-comment-dots"></i> <strong>Catatan Pegawai:</strong><br>
@@ -152,12 +180,6 @@ function displayResults(applications) {
           <button onclick="viewApplication('${app.RequestID}')" class="btn-table btn-view" style="flex:1;">
             <i class="fas fa-eye"></i> Lihat Detail
           </button>
-          
-          ${status === 'query' ? `
-            <button onclick="resubmitQuery('${app.RequestID}')" class="btn-table btn-primary" style="flex:1; background:#3B82F6; color:white;">
-              <i class="fas fa-upload"></i> Hantar Semula
-            </button>
-          ` : ''}
           
           ${suratUrl && suratUrl !== '' ? `
             <a href="${suratUrl}" target="_blank" class="btn-table" style="flex:1; background:#10B981; color:white; text-decoration:none;">
@@ -172,6 +194,7 @@ function displayResults(applications) {
   semakResultDiv.innerHTML = html;
 }
 
+/* ========================= HELPER FUNCTIONS ========================= */
 function getStatusInfo(status) {
   const statusMap = {
     'Baru': { class: 'baru', icon: 'fas fa-paper-plane' },
@@ -205,7 +228,7 @@ function formatDate(dateStr) {
   return day + '/' + month + '/' + year;
 }
 
-// View application details
+/* ========================= VIEW APPLICATION DETAILS ========================= */
 window.viewApplication = async function(requestId) {
   try {
     Swal.fire({
@@ -273,137 +296,5 @@ function showApplicationDetails(data) {
   });
 }
 
-// Placeholder for resubmit (implement later with query fix)
-window.resubmitQuery = async function(requestId) {
-  const { value: files } = await Swal.fire({
-    title: 'Kemaskini Dokumen Query',
-    html: `
-      <div style="text-align:left; padding:1rem;">
-        <p style="color:#EF4444; font-weight:600; margin-bottom:1rem;">
-          ⚠️ PENTING: Fail baru akan menggantikan fail lama sahaja!
-        </p>
-        <p style="margin-bottom:1rem; color:#666; font-size:0.9rem;">
-          Anda boleh pilih muat naik 1, 2, atau 3 fail. Hanya fail yang dimuat naik akan diganti.
-        </p>
-        
-        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
-          1. Surat Permohonan (PDF)
-        </label>
-        <input type="file" id="file_surat_query" accept=".pdf" class="swal2-file" style="width:100%; margin-bottom:1rem;">
-        
-        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
-          2. Borang Permohonan (PDF)
-        </label>
-        <input type="file" id="file_borang_query" accept=".pdf" class="swal2-file" style="width:100%; margin-bottom:1rem;">
-        
-        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">
-          3. Kertas Cadangan (PDF)
-        </label>
-        <input type="file" id="file_cadangan_query" accept=".pdf" class="swal2-file" style="width:100%;">
-        
-        <p style="margin-top:1rem; font-size:0.85rem; color:#10B981;">
-          <i class="fas fa-info-circle"></i> Fail yang tidak dimuat naik akan kekal di Drive
-        </p>
-      </div>
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Hantar Semula',
-    cancelButtonText: 'Batal',
-    confirmButtonColor: '#3B82F6',
-    width: '600px',
-    preConfirm: () => {
-      const fileSurat = document.getElementById('file_surat_query').files[0];
-      const fileBorang = document.getElementById('file_borang_query').files[0];
-      const fileCadangan = document.getElementById('file_cadangan_query').files[0];
-      
-      // At least 1 file required
-      if (!fileSurat && !fileBorang && !fileCadangan) {
-        Swal.showValidationMessage('Sila muat naik sekurang-kurangnya 1 fail!');
-        return false;
-      }
-      
-      return { fileSurat, fileBorang, fileCadangan };
-    }
-  });
-
-  if (!files) return;
-
-  Swal.fire({
-    title: 'Memproses...',
-    html: 'Memuat naik fail baru...<br><small>Sila tunggu</small>',
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading()
-  });
-
-  try {
-    const fileArray = [];
-    
-    // Convert files to base64
-    for (const [key, file] of Object.entries(files)) {
-      if (file) {
-        const base64 = await fileToBase64(file);
-        let type = '';
-        
-        if (key === 'fileSurat') type = 'surat';
-        else if (key === 'fileBorang') type = 'borang';
-        else if (key === 'fileCadangan') type = 'cadangan';
-        
-        fileArray.push({
-          name: file.name,
-          base64: base64,
-          mime: file.type,
-          type: type
-        });
-      }
-    }
-
-    const response = await fetch(GAS_POST, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'resubmitQuery',
-        requestId: requestId,
-        files: fileArray
-      })
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Berjaya!',
-        html: 'Permohonan telah dihantar semula.<br><small>Status kembali ke "Baru"</small>',
-        confirmButtonColor: '#D4AF37'
-      });
-      
-      // Refresh by clicking search button again
-      setTimeout(() => {
-        document.getElementById('btnSemakStatus').click();
-      }, 1500);
-      
-    } else {
-      Swal.fire('Ralat', result.message || 'Gagal menghantar semula', 'error');
-    }
-
-  } catch (error) {
-    Swal.fire('Ralat', 'Tidak dapat berhubung dengan server', 'error');
-    console.error(error);
-  }
-}
-
-// Helper function for file to base64 conversion
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result.split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-});
-});
-
-
+  }); // End safeRun
+}); // End whenReady
