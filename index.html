@@ -69,16 +69,24 @@
           <div class="form-group">
             <label for="kategori"><i class="fas fa-list"></i> Kategori Permohonan</label>
             <select id="kategori" class="form-control">
-              <option value="Kenamaan">Kenamaan</option>
-              <option value="Premis">Premis</option>
-              <option value="Agensi">Agensi</option>
+              <option value="Kenamaan">ORANG KENAMAAN</option>
+              <option value="Agensi">AGENSI</option>
+              <option value="Premis">PREMIS</option>
             </select>
           </div>
 
           <div class="forms">
             <!-- ========== BORANG KENAMAAN ========== -->
             <form id="form-kenamaan" class="form-category active">
-              <h3><i class="fas fa-award"></i> Permohonan — Kenamaan</h3>
+              <h3 style="line-height:1.5; margin-bottom:1.5rem;">
+                <i class="fas fa-award" style="color:#D4AF37;"></i> 
+                <span style="display:block; margin-top:0.5rem; font-size:1.1rem;">
+                  Permohonan Undangan Atau Lawatan Orang Kenamaan Dan Ahli Politik
+                </span>
+                <span style="display:block; font-size:0.85rem; color:#666; font-weight:400; margin-top:0.5rem;">
+                  Ke Institusi Pendidikan Di Bawah Kementerian Pendidikan Malaysia
+                </span>
+              </h3>
               
               <div class="form-row">
                 <div class="form-group">
@@ -211,7 +219,12 @@
 
             <!-- ========== BORANG PREMIS ========== -->
             <form id="form-premis" class="form-category">
-              <h3><i class="fas fa-building"></i> Permohonan — Premis</h3>
+              <h3 style="line-height:1.5; margin-bottom:1.5rem;">
+                <i class="fas fa-building" style="color:#D4AF37;"></i> 
+                <span style="display:block; margin-top:0.5rem; font-size:1rem; text-transform:uppercase;">
+                  Permohonan Penggunaan Premis Sekolah
+                </span>
+              </h3>
               
               <!-- Section 1: Maklumat Sekolah -->
               <div class="form-row">
@@ -352,7 +365,12 @@
 
             <!-- ========== BORANG AGENSI ========== -->
             <form id="form-agensi" class="form-category">
-            <h3><i class="fas fa-landmark"></i> Permohonan — Lawatan Agensi</h3>
+            <h3 style="line-height:1.5; margin-bottom:1.5rem;">
+              <i class="fas fa-landmark" style="color:#D4AF37;"></i> 
+              <span style="display:block; margin-top:0.5rem; font-size:1rem; text-transform:uppercase;">
+                Permohonan Pihak Luar/Agensi Untuk Melaksanakan Program
+              </span>
+            </h3>
   
             <!-- Maklumat Sekolah -->
             <div class="form-row">
@@ -544,12 +562,20 @@
       <div id="subtab-semak" class="subtab-content">
         <div class="content-card">
           <h2><i class="fas fa-search"></i> Semak Status Permohonan</h2>
-          <p class="note">Masukkan Kod Sekolah untuk melihat semua permohonan anda.</p>
+         <p class="note">
+            <i class="fas fa-info-circle"></i> 
+            Masukkan <strong>Kod Sekolah</strong> untuk lihat semua permohonan, atau <strong>Request ID</strong> untuk lihat permohonan tertentu.
+          </p>
 
           <div class="semak-form">
             <div class="form-group">
               <label><i class="fas fa-school"></i> Kod Sekolah</label>
-              <input id="semakKodSekolah" class="form-control" placeholder="Contoh: CBA0001" />
+              <input 
+                  id="semakKodSekolah" 
+                  class="form-control" 
+                  placeholder="Kod Sekolah (CBA0001) atau Request ID (ABC12345)"
+                  style="text-transform:uppercase;"
+                />
             </div>
 
             <button id="btnSemakStatus" class="btn-primary">
@@ -725,6 +751,7 @@
   <script src="js/download.js"></script>
 </body>
 </html>
+
 
 
 
