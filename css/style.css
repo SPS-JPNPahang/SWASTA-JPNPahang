@@ -1041,3 +1041,182 @@ tbody td {
   background: #FEE2E2;
   color: #991B1B;
 }
+/* ===== DOWNLOAD TAB STYLES ===== */
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.download-card {
+  background: #fff;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.download-card:hover {
+  border-color: #D4AF37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+  transform: translateY(-4px);
+}
+
+.download-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+}
+
+.download-icon.kenamaan {
+  background: linear-gradient(135deg, #D4AF37, #F4D03F);
+}
+
+.download-icon.premis {
+  background: linear-gradient(135deg, #3B82F6, #60A5FA);
+}
+
+.download-icon.agensi {
+  background: linear-gradient(135deg, #10B981, #34D399);
+}
+
+.download-icon.larangan {
+  background: linear-gradient(135deg, #EF4444, #F87171);
+}
+
+.download-card h4 {
+  color: #1F2937;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.card-desc {
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+
+.card-subtitle {
+  color: #6B7280;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin: 0.5rem 0 1rem;
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn-download,
+.btn-view {
+  flex: 1;
+  padding: 0.625rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-download {
+  background: #D4AF37;
+  color: white;
+}
+
+.btn-download:hover {
+  background: #B8941F;
+  transform: scale(1.05);
+}
+
+.btn-view {
+  background: #E5E7EB;
+  color: #374151;
+}
+
+.btn-view:hover {
+  background: #D1D5DB;
+}
+
+/* Contact Box */
+.contact-box {
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  border-left: 4px solid #F59E0B;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.contact-box h4 {
+  color: #92400E;
+  margin: 0 0 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-box p {
+  color: #78350F;
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.contact-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #FDE68A;
+}
+
+.contact-details p {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .download-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+  }
+  
+  .btn-download,
+  .btn-view {
+    width: 100%;
+  }
+}
+
+/* When only 1 button - make it full width */
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Single button takes full width */
+.card-actions .btn-download:only-child {
+  width: 100%;
+  max-width: 280px;
+}
