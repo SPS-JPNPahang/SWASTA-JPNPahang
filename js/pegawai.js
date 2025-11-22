@@ -137,24 +137,25 @@ function loadApplications() {
 
         const data = res.data || [];
         const norm = s => String(s || '').trim().toLowerCase();
-        // Sort by date (newest first)
+        
+        // Helper function to sort by date
         const sortByDate = (arr) => {
           return arr.sort((a, b) => {
-          const dateA = new Date(a.TarikhHantar || a.LastUpdated || 0);
-          const dateB = new Date(b.TarikhHantar || b.LastUpdated || 0);
-          return dateB - dateA; // Descending (newest first)
+            const dateA = new Date(a.TarikhHantar || a.LastUpdated || 0);
+            const dateB = new Date(b.TarikhHantar || b.LastUpdated || 0);
+            return dateB - dateA; // Descending (newest first)
           });
         };
-        const baru = data.filter(x => norm(x.Status) === 'baru');
-        const query = data.filter(x => norm(x.Status) === 'query');
-        // Include both Disahkan and Ditolak in the third table
-        const disahkan = data.filter(x => 
+        
+        const baru = sortByDate(data.filter(x => norm(x.Status) === 'baru'));
+        const query = sortByDate(data.filter(x => norm(x.Status) === 'query'));
+        const disahkan = sortByDate(data.filter(x => 
           norm(x.Status) === 'disahkan' ||
           norm(x.Status) === 'ditolak' || 
           norm(x.Status) === 'lulus' || 
           norm(x.Status) === 'tolak'  
-        );
-
+        ));
+        
         const multiDiv = document.getElementById('pegawai-multi');
         const singleDiv = document.getElementById('pegawai-single');
         
@@ -928,4 +929,5 @@ async function bulkApprove() {
     window.approveLetter = approveLetter;
     window.bulkApprove = bulkApprove;
 }); // End safeRun('pegawai-login')
+
 }); // End whenReady
