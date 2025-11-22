@@ -988,4 +988,56 @@ tbody td {
   color: #666;
   margin-bottom: 1.5rem;
   font-size: 0.9rem;
+
+}
+
+/* ===== PRETTIER SEMAK STATUS CARDS ===== */
+.application-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-left: 4px solid #D4AF37;
+  transition: all 0.2s;
+}
+
+.application-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.baru {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.status-badge.query {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.status-badge.disahkan {
+  background: #EDE9FE;
+  color: #5B21B6;
+}
+
+.status-badge.lulus {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.status-badge.tolak {
+  background: #FEE2E2;
+  color: #991B1B;
 }
