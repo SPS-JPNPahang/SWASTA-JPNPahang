@@ -64,6 +64,19 @@ function showFormFor(kategori) {
   
   // Show selected form
   forms[kategori].classList.add('active');
+  
+  // Show/hide upload sections based on kategori
+  const filesKenamaan = document.getElementById('files-kenamaan');
+  const filesAgensi = document.getElementById('files-agensi');
+  const filesPremis = document.getElementById('files-premis');
+  
+  if (filesKenamaan) filesKenamaan.style.display = 'none';
+  if (filesAgensi) filesAgensi.style.display = 'none';
+  if (filesPremis) filesPremis.style.display = 'none';
+  
+  if (kategori === 'Kenamaan' && filesKenamaan) filesKenamaan.style.display = 'block';
+  if (kategori === 'Agensi' && filesAgensi) filesAgensi.style.display = 'block';
+  if (kategori === 'Premis' && filesPremis) filesPremis.style.display = 'block';
 }
 
 // Listen to kategori change
@@ -268,9 +281,22 @@ async function readFileAsBase64(file) {
 }
 
 async function collectFiles() {
-  const fileSurat = document.getElementById('fileSurat').files[0];
-  const fileBorang = document.getElementById('fileBorang').files[0];
-  const fileCadangan = document.getElementById('fileCadangan').files[0];
+  const kategori = kategoriEl.value;
+  let fileSurat, fileBorang, fileCadangan;
+  
+  if (kategori === 'Kenamaan') {
+    fileSurat = document.getElementById('fileSurat').files[0];
+    fileBorang = document.getElementById('fileBorang').files[0];
+    fileCadangan = document.getElementById('fileCadangan').files[0];
+  } else if (kategori === 'Agensi') {
+    fileSurat = document.getElementById('fileSuratAgensi').files[0];
+    fileBorang = null;
+    fileCadangan = document.getElementById('fileCadanganAgensi').files[0];
+  } else if (kategori === 'Premis') {
+    fileSurat = document.getElementById('fileSuratPremis').files[0];
+    fileBorang = null;
+    fileCadangan = document.getElementById('fileCadanganPremis').files[0];
+  }
   
   if (!fileSurat && !fileBorang && !fileCadangan) {
     return [];
@@ -436,6 +462,39 @@ if (!data.kodSekolah) {
   });
   return;
 }
+
+// File validation based on kategori
+if (kategori === 'Kenamaan') {
+  const fileSurat = document.getElementById('fileSurat').files[0];
+  const fileBorang = document.getElementById('fileBorang').files[0];
+  
+  if (!fileSurat || !fileBorang) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Fail Diperlukan',
+      text: 'Sila muat naik Surat Permohonan dan Borang Permohonan.',
+      confirmButtonColor: '#D4AF37'
+    });
+    return;
+  }
+} else {
+  let fileSurat;
+  if (kategori === 'Agensi') {
+    fileSurat = document.getElementById('fileSuratAgensi').files[0];
+  } else if (kategori === 'Premis') {
+    fileSurat = document.getElementById('fileSuratPremis').files[0];
+  }
+  
+  if (!fileSurat) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Fail Diperlukan',
+      text: 'Sila muat naik Surat Permohonan.',
+      confirmButtonColor: '#D4AF37'
+    });
+    return;
+  }
+}
   
   // Check files
   let files = [];
@@ -587,6 +646,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
