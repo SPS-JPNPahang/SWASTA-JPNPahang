@@ -90,21 +90,53 @@
                   Ke Institusi Pendidikan Di Bawah Kementerian Pendidikan Malaysia
                 </span>
               </h3>
-              
+              <!-- DISCLAIMER BOX -->
+<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 1.25rem; border-radius: 6px; margin-bottom: 1.5rem;">
+  <div style="display: flex; gap: 1rem;">
+    <div style="flex-shrink: 0;">
+      <i class="fas fa-exclamation-triangle" style="color: #F59E0B; font-size: 1.5rem;"></i>
+    </div>
+    <div>
+      <h4 style="margin: 0 0 0.5rem 0; color: #92400E; font-size: 1rem;">
+        <strong>PENTING: Had Permohonan</strong>
+      </h4>
+      <p style="margin: 0; color: #78350F; font-size: 0.9rem; line-height: 1.6;">
+        Sistem ini hanya untuk permohonan yang melibatkan:
+      </p>
+      <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem; color: #78350F; font-size: 0.9rem;">
+        <li><strong>1 sekolah sahaja</strong></li>
+        <li><strong>1 daerah sahaja</strong></li>
+        <li><strong>1 negeri (Pahang) sahaja</strong></li>
+      </ul>
+      <p style="margin: 0.75rem 0 0 0; color: #92400E; font-size: 0.9rem;">
+        <strong>Sekiranya permohonan melibatkan lebih daripada satu sekolah, daerah, atau campuran,</strong> 
+        sila hantar permohonan secara manual ke:
+      </p>
+      <div style="background: #FFFBEB; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem;">
+        <p style="margin: 0; color: #78350F; font-size: 0.85rem; font-weight: 600;">
+          <i class="fas fa-envelope"></i> Unit Swasta<br>
+          <i class="fas fa-building"></i> Sektor Pengurusan Sekolah, JPN Pahang
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
               <div class="form-row">
-                <div class="form-group">
-                  <label>Kod Sekolah *</label>
-                  <div style="display: flex; gap: 0.5rem;">
-                    <input id="kodSekolah_k" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
-                    <button type="button" class="btn-secondary" onclick="openSchoolLookup('k')" style="white-space: nowrap;">
-                      <i class="fas fa-search"></i> Cari
-                    </button>
-                  </div>
-                  <small style="color: #666; font-size: 0.85rem;">
-                    <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
-                  </small>
-                </div>
-              </div>
+  <div class="form-group">
+    <label>Sekolah *</label>
+    <input 
+      id="kodSekolah_k" 
+      class="form-control" 
+      list="schoolList_k"
+      placeholder="Taip nama sekolah untuk cari..." 
+      autocomplete="off"
+    />
+    <datalist id="schoolList_k"></datalist>
+    <small style="color: #666; font-size: 0.85rem;">
+      <i class="fas fa-info-circle"></i> Taip nama sekolah, sistem akan paparkan pilihan
+    </small>
+  </div>
+</div>
 
               <div class="form-row">
                 <div class="form-group">
@@ -193,31 +225,20 @@
                 </div>
               </div>
 
-              <!-- Perasmi Fields -->
-              <div id="perasmiFields_k" style="display:none;">
-                <div style="display:block; margin-bottom:1rem;">
-                  <label style="display:block; margin-bottom:0.5rem;">Nama Perasmi *</label>
-                  <input id="namaPerasmi_k" class="form-control" placeholder="Nama perasmi" style="width:100%;" />
-                </div>
-                
-                <div style="display:block; margin-bottom:1rem;">
-                  <label style="display:block; margin-bottom:0.5rem;">Jawatan Perasmi *</label>
-                  <input id="jawatanPerasmi_k" class="form-control" placeholder="Jawatan perasmi" style="width:100%;" />
-                </div>
+             <!-- Nama & Jawatan (For ALL Jenis) -->
+            <div class="form-row">
+              <div class="form-group">
+                <label id="labelNama_k">Nama *</label>
+                <input id="namaOrang_k" class="form-control" placeholder="Nama penuh jemputan" />
               </div>
-              
-              <!-- Penceramah Fields -->
-              <div id="penceramahFields_k" style="display:none;">
-                <div style="display:block; margin-bottom:1rem;">
-                  <label style="display:block; margin-bottom:0.5rem;">Nama Penceramah *</label>
-                  <input id="namaPenceramah_k" class="form-control" placeholder="Nama penceramah" style="width:100%;" />
-                </div>
-                
-                <div style="display:block; margin-bottom:0.5rem;">
-                  <label style="display:block; margin-bottom:0.5rem;">Jawatan Penceramah *</label>
-                  <input id="jawatanPenceramah_k" class="form-control" placeholder="Jawatan penceramah" style="width:100%;" />
-                </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label id="labelJawatan_k">Jawatan *</label>
+                <input id="jawatanOrang_k" class="form-control" placeholder="Jawatan" />
               </div>
+            </div>
 
               <div class="divider"></div>
               <h4><i class="fas fa-user"></i> Maklumat Pemohon</h4>
@@ -284,19 +305,21 @@
               
               <!-- Section 1: Maklumat Sekolah -->
               <div class="form-row">
-                <div class="form-group">
-                  <label>Kod Sekolah *</label>
-                  <div style="display: flex; gap: 0.5rem;">
-                    <input id="kodSekolah_p" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
-                    <button type="button" class="btn-secondary" onclick="openSchoolLookup('p')" style="white-space: nowrap;">
-                      <i class="fas fa-search"></i> Cari
-                    </button>
-                  </div>
-                  <small style="color: #666; font-size: 0.85rem;">
-                    <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
-                  </small>
-                </div>
-              </div>
+  <div class="form-group">
+    <label>Sekolah *</label>
+    <input 
+      id="kodSekolah_p" 
+      class="form-control" 
+      list="schoolList_p"
+      placeholder="Taip nama sekolah untuk cari..." 
+      autocomplete="off"
+    />
+    <datalist id="schoolList_p"></datalist>
+    <small style="color: #666; font-size: 0.85rem;">
+      <i class="fas fa-info-circle"></i> Taip nama sekolah, sistem akan paparkan pilihan
+    </small>
+  </div>
+</div>
 
               <div class="form-row">
                 <div class="form-group">
@@ -318,12 +341,11 @@
             
               <div class="form-row">
                 <div class="form-group">
-                  <label>Jawatan Ketua Sekolah *</label>
+                  <label>Jawatan*</label>
                   <select id="jawatanKetua_p" class="form-control">
                     <option value="">-- Pilih --</option>
                     <option value="PENGETUA">PENGETUA</option>
                     <option value="GURU BESAR">GURU BESAR</option>
-                    <option value="PENGARAH">PENGARAH</option>
                   </select>
                 </div>
               </div>
@@ -446,23 +468,54 @@
                 Permohonan Pihak Luar/Agensi Untuk Melaksanakan Program
               </span>
             </h3>
-  
+  <!-- DISCLAIMER BOX -->
+<div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 1.25rem; border-radius: 6px; margin-bottom: 1.5rem;">
+  <div style="display: flex; gap: 1rem;">
+    <div style="flex-shrink: 0;">
+      <i class="fas fa-exclamation-triangle" style="color: #F59E0B; font-size: 1.5rem;"></i>
+    </div>
+    <div>
+      <h4 style="margin: 0 0 0.5rem 0; color: #92400E; font-size: 1rem;">
+        <strong>PENTING: Had Permohonan</strong>
+      </h4>
+      <p style="margin: 0; color: #78350F; font-size: 0.9rem; line-height: 1.6;">
+        Sistem ini hanya untuk permohonan yang melibatkan:
+      </p>
+      <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem; color: #78350F; font-size: 0.9rem;">
+        <li><strong>1 sekolah sahaja</strong></li>
+        <li><strong>1 daerah sahaja</strong></li>
+        <li><strong>1 negeri (Pahang) sahaja</strong></li>
+      </ul>
+      <p style="margin: 0.75rem 0 0 0; color: #92400E; font-size: 0.9rem;">
+        <strong>Sekiranya permohonan melibatkan lebih daripada satu sekolah, daerah, atau campuran,</strong> 
+        sila hantar permohonan secara manual ke:
+      </p>
+      <div style="background: #FFFBEB; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem;">
+        <p style="margin: 0; color: #78350F; font-size: 0.85rem; font-weight: 600;">
+          <i class="fas fa-envelope"></i> Unit Swasta<br>
+          <i class="fas fa-building"></i> Sektor Pengurusan Sekolah, JPN Pahang
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
             <!-- Maklumat Sekolah -->
            <div class="form-row">
-              <div class="form-group">
-              <label>Kod Sekolah *</label>
-              <div style="display: flex; gap: 0.5rem;">
-                <input id="kodSekolah_a" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
-                <button type="button" class="btn-secondary" onclick="openSchoolLookup('a')" style="white-space: nowrap;">
-                  <i class="fas fa-search"></i> Cari
-                </button>
-              </div>
-              <small style="color: #666; font-size: 0.85rem;">
-                <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
-              </small>
-              </div>
-            </div>
-
+  <div class="form-group">
+    <label>Sekolah *</label>
+    <input 
+      id="kodSekolah_a" 
+      class="form-control" 
+      list="schoolList_a"
+      placeholder="Taip nama sekolah untuk cari..." 
+      autocomplete="off"
+    />
+    <datalist id="schoolList_a"></datalist>
+    <small style="color: #666; font-size: 0.85rem;">
+      <i class="fas fa-info-circle"></i> Taip nama sekolah, sistem akan paparkan pilihan
+    </small>
+  </div>
+</div>
   <div class="form-row">
     <div class="form-group">
       <label>Nama Sekolah</label>
@@ -478,6 +531,16 @@
     <div class="form-group">
       <label>Peringkat</label>
       <input id="peringkat_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
+    </div>
+  </div>
+              <div class="form-row">
+    <div class="form-group">
+      <label>Jawatan*</label>
+      <select id="jawatanKetua_a" class="form-control">
+        <option value="">-- Pilih --</option>
+        <option value="PENGETUA">PENGETUA</option>
+        <option value="GURU BESAR">GURU BESAR</option>
+      </select>
     </div>
   </div>
 
@@ -554,18 +617,7 @@
       <input id="hariProgramTamat_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
     </div>
   </div>
-
-  <div class="form-row">
-    <div class="form-group">
-      <label>Jawatan Ketua Sekolah *</label>
-      <select id="jawatanKetua_a" class="form-control">
-        <option value="">-- Pilih --</option>
-        <option value="PENGETUA">PENGETUA</option>
-        <option value="GURU BESAR">GURU BESAR</option>
-        <option values="PENGARAH">PENGARAH</option>
-      </select>
-    </div>
-  </div>
+              
             <!-- Rujukan Surat (NEW) -->
       <div class="divider"></div>
         <h4><i class="fas fa-file-alt"></i> Rujukan Surat Permohonan</h4>
@@ -1106,6 +1158,7 @@
   <script src="js/download.js"></script>
 </body>
 </html>
+
 
 
 
