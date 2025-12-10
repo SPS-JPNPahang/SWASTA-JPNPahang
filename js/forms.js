@@ -187,9 +187,26 @@ function wireAutofill(prefix) {
         } else {
           perasmiDiv.style.display = 'none';
           penceramahDiv.style.display = 'none';
+          
+          // Show/hide Lain-lain field
+          const lainLainDiv = document.getElementById('jenisLainLain_k');
+          if (lainLainDiv) {
+            lainLainDiv.style.display = (jenis === 'Lain-lain') ? 'block' : 'none';
+          }
         }
       });
     }
+/* ===== FASILITI PREMIS HANDLER ===== */
+const namaFasilitiEl = document.getElementById('namaFasiliti_p');
+if (namaFasilitiEl) {
+  namaFasilitiEl.addEventListener('change', function() {
+    const fasilitiLainLainDiv = document.getElementById('fasilitiLainLain_p');
+    if (fasilitiLainLainDiv) {
+      fasilitiLainLainDiv.style.display = (this.value === 'LAIN-LAIN') ? 'block' : 'none';
+    }
+  });
+}
+    
 /* ===== FILE UPLOAD HANDLING ===== */
 function setupFileInputs() {
   const fileInputs = [
@@ -317,8 +334,10 @@ function collectFormData(kategori) {
   const data = { kategori: kategori };
   
   if (kategori === 'Kenamaan') {
-  data.kodSekolah = norm(document.getElementById('kodSekolah_k').value);
-  data.jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
+  const jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
+  data.jenisKenamaan = (jenisKenamaan === 'Lain-lain') 
+    ? document.getElementById('jenisLainLainText_k').value 
+    : jenisKenamaan;
   data.poskod = document.getElementById('poskod_k').value.trim();
   data.jawatanKetua = document.getElementById('jawatanKetua_k').value;
   data.tarikhProgram = document.getElementById('tarikhProgram_k').value;
@@ -358,7 +377,10 @@ function collectFormData(kategori) {
   data.tajukSurat = document.getElementById('tajukSurat_p').value.trim();
   data.noRujSuratPemohon = document.getElementById('noRujSurat_p').value.trim();
   data.tarikhSuratPemohon = document.getElementById('tarikhSurat_p').value;
-  data.namaFasiliti = document.getElementById('namaFasiliti_p').value;
+  const namaFasiliti = document.getElementById('namaFasiliti_p').value;
+  data.namaFasiliti = (namaFasiliti === 'LAIN-LAIN')
+    ? document.getElementById('fasilitiLainLainText_p').value
+    : namaFasiliti;
   data.tarikhProgramLaksana = document.getElementById('tarikhLaksana_p').value;
   
   // Penghubung
