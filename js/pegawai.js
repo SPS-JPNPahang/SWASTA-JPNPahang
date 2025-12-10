@@ -2,8 +2,19 @@
 whenReady(() => {
   safeRun('pegawai-login', () => {
 
-let currentOfficerRole = null; // 'semak' or 'lulus'
+let currentOfficerRole = null; // 'semak', 'lulus', or 'ppd'
 let currentApplications = [];
+let currentFilters = {
+  kategori: 'Semua',
+  daerah: 'Semua'
+};
+let currentPpdDaerah = null;
+let ppdAllData = [];
+let ppdFilteredData = [];
+let ppdFilters = {
+  kategori: 'Semua',
+  status: 'Semua'
+};
 
 // DOM Elements
 const pegawaiLoginDiv = document.getElementById('pegawai-login');
@@ -51,8 +62,14 @@ async function handleLogin() {
     const result = await response.json();
 
     if (result && result.success) {
-      currentOfficerRole = result.role; // 'semak' or 'lulus'
-      showDashboard();
+      currentOfficerRole = result.role; // 'semak', 'lulus', or 'ppd'
+      
+      if (result.role === 'ppd') {
+        currentPpdDaerah = result.daerah;
+        showPpdDashboard();
+      } else {
+        showDashboard();
+      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -117,8 +134,76 @@ btnPegawaiLogout.addEventListener('click', () => {
   });
 });
 
+// PPD Logout
+const btnPpdLogout = document.getElementById('btnPpdLogout');
+if (btnPpdLogout) {
+  btnPpdLogout.addEventListener('click', () => {
+    currentOfficerRole = null;
+    currentApplications = [];
+    currentPpdDaerah = null;
+    ppdAllData = [];
+    ppdFilteredData = [];
+    pegawaiPasswordInput.value = '';
+    pegawaiLoginDiv.style.display = 'block';
+    
+    const ppdDashboard = document.getElementById('ppd-dashboard');
+    if (ppdDashboard) ppdDashboard.style.display = 'none';
+
+    Swal.fire({
+      icon: 'info',
+      title: 'Log Keluar Berjaya',
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  });
+}
+
 // Refresh
 btnRefreshDashboard.addEventListener('click', loadApplications);
+// Pegawai Filter event listeners
+const filterKategori = document.getElementById('filterKategori');
+const filterDaerah = document.getElementById('filterDaerah');
+
+if (filterKategori) {
+  filterKategori.addEventListener('change', function() {
+    currentFilters.kategori = this.value;
+    applyFilters();
+  });
+}
+
+if (filterDaerah) {
+  filterDaerah.addEventListener('change', function() {
+    currentFilters.daerah = this.value;
+    applyFilters();
+  });
+}
+
+// PPD Filter Listeners
+const ppdFilterKategori = document.getElementById('ppdFilterKategori');
+const ppdFilterStatus = document.getElementById('ppdFilterStatus');
+const btnPpdRefresh = document.getElementById('btnPpdRefresh');
+
+if (ppdFilterKategori) {
+  ppdFilterKategori.addEventListener('change', function() {
+    ppdFilters.kategori = this.value;
+    applyPpdFilters();
+  });
+}
+
+if (ppdFilterStatus) {
+  ppdFilterStatus.addEventListener('change', function() {
+    ppdFilters.status = this.value;
+    applyPpdFilters();
+  });
+}
+
+if (btnPpdRefresh) {
+  btnPpdRefresh.addEventListener('click', () => {
+    loadPpdData();
+  });
+}
 
 /* ========================= LOAD APPLICATIONS ========================== */
 function loadApplications() {
@@ -148,6 +233,7 @@ function loadApplications() {
         };
         
         const baru = sortByDate(data.filter(x => norm(x.Status) === 'baru'));
+        currentApplications = data; // Store for filtering
         const query = sortByDate(data.filter(x => norm(x.Status) === 'query'));
         const disahkan = sortByDate(data.filter(x => 
           norm(x.Status) === 'disahkan' ||
@@ -198,7 +284,7 @@ function loadApplications() {
         const dateB = new Date(b.LastUpdated || b.TarikhHantar || 0);
           return dateB - dateA; // Newest first
           });
-        currentApplications = filtered; // Store for bulk approve
+        currentApplications = data; // Store ALL data for filtering
 
         const multiDiv = document.getElementById('pegawai-multi');
         const singleDiv = document.getElementById('pegawai-single');
@@ -216,7 +302,84 @@ function loadApplications() {
       });
   }
 }
+/* ========================= APPLY FILTERS ========================== */
+function applyFilters() {
+  if (!currentApplications || currentApplications.length === 0) {
+    return;
+  }
 
+  if (currentOfficerRole === 'semak') {
+    const norm = s => String(s || '').trim().toLowerCase();
+    
+    let filtered = currentApplications;
+    
+    if (currentFilters.kategori !== 'Semua') {
+      filtered = filtered.filter(x => x.Kategori === currentFilters.kategori);
+    }
+    
+    if (currentFilters.daerah !== 'Semua') {
+      filtered = filtered.filter(x => {
+        const daerahUpper = String(x.Daerah || '').toUpperCase();
+        return daerahUpper === currentFilters.daerah;
+      });
+    }
+    
+    const sortByDate = (arr) => {
+      return arr.sort((a, b) => {
+        const dateA = new Date(a.TarikhHantar || a.LastUpdated || 0);
+        const dateB = new Date(b.TarikhHantar || b.LastUpdated || 0);
+        return dateB - dateA;
+      });
+    };
+    
+    const baru = sortByDate(filtered.filter(x => norm(x.Status) === 'baru'));
+    const query = sortByDate(filtered.filter(x => norm(x.Status) === 'query'));
+    const disahkan = sortByDate(filtered.filter(x => 
+      norm(x.Status) === 'disahkan' ||
+      norm(x.Status) === 'ditolak' || 
+      norm(x.Status) === 'lulus' || 
+      norm(x.Status) === 'tolak'  
+    ));
+    
+    const baruDiv = document.getElementById('tbl-baru');
+    const queryDiv = document.getElementById('tbl-query');
+    const disahkanDiv = document.getElementById('tbl-disahkan');
+    
+    if (baruDiv) baruDiv.innerHTML = buildTableHtml(baru, 'semak', 'Baru');
+    if (queryDiv) queryDiv.innerHTML = buildTableHtml(query, 'semak', 'Query');
+    if (disahkanDiv) disahkanDiv.innerHTML = buildTableHtml(disahkan, 'semak', 'Disahkan/Ditolak/Lulus');
+  }
+  
+  else {
+    const norm = s => String(s || '').trim().toLowerCase();
+    
+    let filtered = currentApplications.filter(x => 
+      norm(x.Status) === 'disahkan' || norm(x.Status) === 'ditolak'
+    );
+    
+    if (currentFilters.kategori !== 'Semua') {
+      filtered = filtered.filter(x => x.Kategori === currentFilters.kategori);
+    }
+    
+    if (currentFilters.daerah !== 'Semua') {
+      filtered = filtered.filter(x => {
+        const daerahUpper = String(x.Daerah || '').toUpperCase();
+        return daerahUpper === currentFilters.daerah;
+      });
+    }
+    
+    const sortedFiltered = filtered.sort((a, b) => {
+      const dateA = new Date(a.LastUpdated || a.TarikhHantar || 0);
+      const dateB = new Date(b.LastUpdated || b.TarikhHantar || 0);
+      return dateB - dateA;
+    });
+    
+    const singleDiv = document.getElementById('pegawai-single');
+    if (singleDiv) {
+      singleDiv.innerHTML = buildTableHtml(sortedFiltered, 'lulus', 'Disahkan/Ditolak');
+    }
+  }
+}
 /* ========================= TABLE BUILDER ========================== */
 function buildTableHtml(items, role, statusLabel) {
   if (!items || items.length === 0) {
@@ -307,10 +470,15 @@ function getActionButtons(app, role) {
         <i class="fas fa-check"></i> Sahkan
       </button>`;
       
-      // Tambah butang TOLAK untuk Premis sahaja
+      // Tambah butang TOLAK untuk Premis DAN Agensi
       if (kategori === 'Premis') {
         b += `
         <button class="btn-table btn-reject" onclick="tolakPremis('${app.RequestID}')">
+          <i class="fas fa-times"></i> Tolak
+        </button>`;
+      } else if (kategori === 'Agensi') {
+        b += `
+        <button class="btn-table btn-reject" onclick="tolakAgensi('${app.RequestID}')">
           <i class="fas fa-times"></i> Tolak
         </button>`;
       }
@@ -928,6 +1096,355 @@ async function bulkApprove() {
     window.tolakPremis = tolakPremis;
     window.approveLetter = approveLetter;
     window.bulkApprove = bulkApprove;
-}); // End safeRun('pegawai-login')
+/* ========================= PPD DASHBOARD ========================== */
+function showPpdDashboard() {
+  pegawaiLoginDiv.style.display = 'none';
+  
+  const ppdDashboard = document.getElementById('ppd-dashboard');
+  if (ppdDashboard) {
+    ppdDashboard.style.display = 'block';
+  }
+  
+  const dashboardTitle = document.getElementById('ppd-dashboard-title');
+  if (dashboardTitle) {
+    if (currentPpdDaerah === 'NEGERI') {
+      dashboardTitle.innerHTML = '<i class="fas fa-map"></i> Dashboard PPD Negeri Pahang';
+    } else {
+      dashboardTitle.innerHTML = '<i class="fas fa-map-marker-alt"></i> Dashboard PPD ' + currentPpdDaerah;
+    }
+  }
+  
+  loadPpdData();
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'Berjaya Log Masuk',
+    text: currentPpdDaerah === 'NEGERI' ? 'PPD Negeri' : 'PPD ' + currentPpdDaerah,
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 2000
+  });
+}
 
+async function loadPpdData() {
+  try {
+    Swal.fire({
+      title: 'Memuatkan data...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+    
+    const response = await fetch(buildGET('listMaster'));
+    const result = await response.json();
+    
+    Swal.close();
+    
+    if (result && result.success && result.data) {
+      let data = result.data;
+      
+      if (currentPpdDaerah !== 'NEGERI') {
+        data = data.filter(app => {
+          const daerahUpper = String(app.Daerah || '').toUpperCase();
+          return daerahUpper === currentPpdDaerah;
+        });
+      }
+      
+      ppdAllData = data;
+      
+      ppdFilters.kategori = 'Semua';
+      ppdFilters.status = 'Semua';
+      
+      const ppdFilterKategori = document.getElementById('ppdFilterKategori');
+      const ppdFilterStatus = document.getElementById('ppdFilterStatus');
+      if (ppdFilterKategori) ppdFilterKategori.value = 'Semua';
+      if (ppdFilterStatus) ppdFilterStatus.value = 'Semua';
+      
+      applyPpdFilters();
+      
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Ralat',
+        text: 'Tidak dapat memuatkan data',
+        confirmButtonColor: '#D4AF37'
+      });
+    }
+    
+  } catch (error) {
+    Swal.close();
+    console.error('Load PPD data error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Ralat',
+      text: 'Tidak dapat berhubung dengan server',
+      confirmButtonColor: '#D4AF37'
+    });
+  }
+}
+
+function applyPpdFilters() {
+  if (!ppdAllData || ppdAllData.length === 0) {
+    return;
+  }
+  
+  let filtered = ppdAllData;
+  
+  if (ppdFilters.kategori !== 'Semua') {
+    filtered = filtered.filter(app => app.Kategori === ppdFilters.kategori);
+  }
+  
+  if (ppdFilters.status !== 'Semua') {
+    filtered = filtered.filter(app => {
+      const status = String(app.Status || '').toLowerCase();
+      const filterStatus = ppdFilters.status.toLowerCase();
+      return status === filterStatus || 
+             (filterStatus === 'tolak' && (status === 'tolak' || status === 'ditolak'));
+    });
+  }
+  
+  ppdFilteredData = filtered;
+  
+  displayPpdStats(filtered);
+  displayPpdCategoryBreakdown(filtered);
+  displayPpdApplicationsTable(filtered);
+}
+
+function displayPpdStats(data) {
+  const total = data.length;
+  const baru = data.filter(x => String(x.Status || '').toLowerCase() === 'baru').length;
+  const query = data.filter(x => String(x.Status || '').toLowerCase() === 'query').length;
+  const disahkan = data.filter(x => String(x.Status || '').toLowerCase() === 'disahkan').length;
+  const lulus = data.filter(x => String(x.Status || '').toLowerCase() === 'lulus').length;
+  const tolak = data.filter(x => {
+    const s = String(x.Status || '').toLowerCase();
+    return s === 'tolak' || s === 'ditolak';
+  }).length;
+  
+  const statsDiv = document.getElementById('ppd-stats-cards');
+  if (!statsDiv) return;
+  
+  statsDiv.innerHTML = `
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${total}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">JUMLAH</div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${baru}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">BARU</div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${query}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">QUERY</div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${disahkan}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">DISAHKAN</div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${lulus}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">LULUS</div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 1.5rem; border-radius: 10px; text-align: center;">
+      <div style="font-size: 2.5rem; font-weight: bold;">${tolak}</div>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; opacity: 0.9;">DITOLAK</div>
+    </div>
+  `;
+}
+
+function displayPpdCategoryBreakdown(data) {
+  const kenamaan = data.filter(x => x.Kategori === 'Kenamaan').length;
+  const agensi = data.filter(x => x.Kategori === 'Agensi').length;
+  const premis = data.filter(x => x.Kategori === 'Premis').length;
+  const total = data.length || 1;
+  
+  const categoryDiv = document.getElementById('ppd-category-breakdown');
+  if (!categoryDiv) return;
+  
+  const createBar = (label, value, total, color) => {
+    const percentage = ((value / total) * 100).toFixed(1);
+    return `
+      <div style="margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+          <span style="font-weight: 600;">${label}</span>
+          <span style="color: #666;">${value} (${percentage}%)</span>
+        </div>
+        <div style="background: #E5E7EB; height: 30px; border-radius: 5px; overflow: hidden;">
+          <div style="background: ${color}; height: 100%; width: ${percentage}%; transition: width 0.3s ease;"></div>
+        </div>
+      </div>
+    `;
+  };
+  
+  categoryDiv.innerHTML = `
+    ${createBar('Kenamaan', kenamaan, total, '#D4AF37')}
+    ${createBar('Agensi', agensi, total, '#3B82F6')}
+    ${createBar('Premis', premis, total, '#10B981')}
+  `;
+}
+
+function displayPpdApplicationsTable(data) {
+  const tableDiv = document.getElementById('ppd-applications-table');
+  if (!tableDiv) return;
+  
+  if (data.length === 0) {
+    tableDiv.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Tiada permohonan ditemui.</p>';
+    return;
+  }
+  
+  const sorted = data.sort((a, b) => {
+    const dateA = new Date(a.TarikhHantar || 0);
+    const dateB = new Date(b.TarikhHantar || 0);
+    return dateB - dateA;
+  });
+  
+  let html = '<table>';
+  html += '<thead>';
+  html += '<tr>';
+  html += '<th>Request ID</th>';
+  html += '<th>Sekolah</th>';
+  html += '<th>Kategori</th>';
+  html += '<th>Tarikh</th>';
+  html += '<th>Status</th>';
+  html += '<th>Tindakan</th>';
+  html += '</tr>';
+  html += '</thead>';
+  html += '<tbody>';
+  
+  sorted.forEach(app => {
+    html += '<tr>';
+    html += '<td><strong>' + (app.RequestID || '-') + '</strong></td>';
+    html += '<td>' + (app.NamaSekolah || '-') + '</td>';
+    html += '<td>' + (app.Kategori || '-') + '</td>';
+    html += '<td>' + formatDate(app.TarikhHantar) + '</td>';
+    html += '<td><span class="status-badge ' + getStatusClass(app.Status) + '">' + (app.Status || 'Baru') + '</span></td>';
+    html += '<td><button class="btn-table btn-view" onclick="viewApplicationDetails(\'' + app.RequestID + '\')"><i class="fas fa-eye"></i> Lihat</button></td>';
+    html += '</tr>';
+  });
+  
+  html += '</tbody>';
+  html += '</table>';
+  
+  tableDiv.innerHTML = html;
+}
+
+/* ========================= TOLAK AGENSI ========================== */
+window.tolakAgensi = async function(requestId) {
+  const { value: formValues } = await Swal.fire({
+    title: 'Tolak Permohonan Agensi',
+    html: `
+      <div style="text-align: left;">
+        <p style="margin-bottom: 1rem; color: #666;">
+          <i class="fas fa-info-circle"></i> Masukkan maklumat surat penolakan
+        </p>
+        
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            Jilid Surat *
+          </label>
+          <input id="jilid-agensi" class="swal2-input" placeholder="Contoh: JPN.PHG(SPS)" style="width: 90%;">
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            Bilangan Surat *
+          </label>
+          <input id="bilSurat-agensi" class="swal2-input" placeholder="Contoh: 1234" style="width: 90%;">
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            Tarikh Surat *
+          </label>
+          <input id="tarikhSurat-agensi" type="date" class="swal2-input" style="width: 90%;">
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            Sebab Penolakan *
+          </label>
+          <textarea id="sebabPenolakan-agensi" class="swal2-textarea" placeholder="Nyatakan sebab permohonan ditolak..." style="width: 90%; min-height: 100px;"></textarea>
+        </div>
+      </div>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonText: '<i class="fas fa-paper-plane"></i> Hantar Penolakan',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#EF4444',
+    cancelButtonColor: '#6B7280',
+    width: '600px',
+    preConfirm: () => {
+      const jilid = document.getElementById('jilid-agensi').value;
+      const bilSurat = document.getElementById('bilSurat-agensi').value;
+      const tarikhSurat = document.getElementById('tarikhSurat-agensi').value;
+      const sebabPenolakan = document.getElementById('sebabPenolakan-agensi').value;
+      
+      if (!jilid || !bilSurat || !tarikhSurat || !sebabPenolakan) {
+        Swal.showValidationMessage('Sila lengkapkan semua maklumat');
+        return false;
+      }
+      
+      return { jilid, bilSurat, tarikhSurat, sebabPenolakan };
+    }
+  });
+  
+  if (formValues) {
+    try {
+      Swal.fire({
+        title: 'Menghantar penolakan...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+      
+      const response = await fetch(GAS_POST, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'tolakAgensi',
+          requestId: requestId,
+          jilid: formValues.jilid,
+          bilSurat: formValues.bilSurat,
+          tarikhSurat: formValues.tarikhSurat,
+          sebabPenolakan: formValues.sebabPenolakan
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Berjaya Ditolak',
+          text: 'Surat penolakan telah dihantar ke agensi.',
+          confirmButtonColor: '#D4AF37'
+        }).then(() => {
+          loadApplications();
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ralat',
+          text: result.message || 'Gagal menolak permohonan',
+          confirmButtonColor: '#D4AF37'
+        });
+      }
+      
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Ralat',
+        text: 'Tidak dapat berhubung dengan server',
+        confirmButtonColor: '#D4AF37'
+      });
+    }
+  }
+}
+
+}); // End safeRun('pegawai-login')
 }); // End whenReady
+
