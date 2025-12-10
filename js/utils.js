@@ -44,4 +44,32 @@ function whenReady(callback) {
  */
 // Keep your existing buildGET in config.js
 
+/**
+ * formatDateMY - Format tarikh dalam Bahasa Melayu
+ * 
+ * @param {string} dateStr - Date string
+ * @param {string} format - 'short' (09/12/2025), 'medium' (09 Dis 2025), 'long' (09 Disember 2025)
+ */
+function formatDateMY(dateStr, format = 'short') {
+  if (!dateStr) return '-';
+  
+  const date = new Date(dateStr);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  
+  const bulanPendek = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogos', 'Sep', 'Okt', 'Nov', 'Dis'];
+  const bulanPenuh = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+  
+  if (format === 'short') {
+    return `${day}/${String(month).padStart(2, '0')}/${year}`;
+  } else if (format === 'medium') {
+    return `${day} ${bulanPendek[date.getMonth()]} ${year}`;
+  } else if (format === 'long') {
+    return `${day} ${bulanPenuh[date.getMonth()]} ${year}`;
+  }
+  
+  return `${day}/${String(month).padStart(2, '0')}/${year}`;
+}
+
 console.log('✅ utils.js loaded');
