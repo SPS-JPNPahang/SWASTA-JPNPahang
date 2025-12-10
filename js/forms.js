@@ -26,11 +26,30 @@ async function init() {
     if (json && json.success) {
       SCHOOLS = json.schools || [];
       console.log('✅ Loaded ' + SCHOOLS.length + ' schools');
+      
+      // Populate datalists
+      populateSchoolDatalist('k');
+      populateSchoolDatalist('p');
+      populateSchoolDatalist('a');
     }
   } catch (error) {
     console.log('⚠️ Schools not loaded, manual entry required');
     SCHOOLS = [];
   }
+}
+/* ===== POPULATE SCHOOL DATALIST ===== */
+function populateSchoolDatalist(prefix) {
+  const datalist = document.getElementById('schoolList_' + prefix);
+  if (!datalist) return;
+  
+  datalist.innerHTML = '';
+  
+  SCHOOLS.forEach(school => {
+    const option = document.createElement('option');
+    option.value = school.kod;
+    option.textContent = school.nama + ' (' + school.daerah + ')';
+    datalist.appendChild(option);
+  });
 }
 
 // Panggil selepas DOM ready
@@ -106,8 +125,29 @@ function wireAutofill(prefix) {
   if (!kodInput) return;
   
   kodInput.addEventListener('input', (e) => {
-    e.target.value = norm(e.target.value);
-  });
+  const input = e.target.value.toUpperCase().trim();
+  
+  // Check if kod is valid
+  const school = SCHOOLS.find(s => s.kod === input);
+  
+  if (school) {
+    // Auto-fill fields
+    if (namaInput) namaInput.value = school.nama || '';
+    if (daerahInput) daerahInput.value = school.daerah || '';
+    if (peringkatInput) peringkatInput.value = school.peringkat || '';
+    
+    // Success notification
+    Swal.fire({
+      icon: 'success',
+      title: 'Sekolah Dijumpai',
+      text: school.nama,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  }
+});
   
   kodInput.addEventListener('blur', () => {
     const kod = norm(kodInput.value);
@@ -646,6 +686,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
