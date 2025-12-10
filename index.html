@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SWASTA @ SPS — Portal Digital</title>
+  <title>PERHUBUNGAN @ SPS — Portal Digital</title>
   
   <!-- SweetAlert2 CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -20,7 +20,7 @@
   <!-- HEADER -->
   <header class="main-header">
     <div class="header-content">
-      <h1><i class="fas fa-building"></i> SWASTA @ SPS</h1>
+      <h1><i class="fas fa-handshake"></i> PERHUBUNGAN @ SPS</h1>
       <p class="subtitle">Sistem Permohonan Digital</p>
     </div>
   </header>
@@ -39,6 +39,9 @@
       </button>
       <button class="tab-btn" data-tab="download">
         <i class="fas fa-download"></i> MUAT TURUN
+      </button>
+      <button class="tab-btn" data-tab="analisis">
+        <i class="fas fa-chart-bar"></i> ANALISIS
       </button>
     </div>
   </div>
@@ -91,7 +94,15 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Kod Sekolah *</label>
-                  <input id="kodSekolah_k" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" />
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input id="kodSekolah_k" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
+                    <button type="button" class="btn-secondary" onclick="openSchoolLookup('k')" style="white-space: nowrap;">
+                      <i class="fas fa-search"></i> Cari
+                    </button>
+                  </div>
+                  <small style="color: #666; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
+                  </small>
                 </div>
               </div>
 
@@ -119,8 +130,21 @@
                       <option value="">-- Pilih Jenis --</option>
                       <option value="Perasmi">Perasmi</option>
                       <option value="Penceramah">Penceramah</option>
+                      <option value="Undangan">Undangan</option>
+                      <option value="Tetamu">Tetamu</option>
+                      <option value="Penyumbang">Penyumbang</option>
+                      <option value="Lawatan">Lawatan</option>
+                      <option value="Lain-lain">Lain-lain</option>
                     </select>
                   </div>
+                  </div>
+                  
+                  <!-- Field for Lain-lain -->
+                  <div class="form-row" id="jenisLainLain_k" style="display:none;">
+                    <div class="form-group">
+                      <label>Nyatakan Jenis Kenamaan *</label>
+                      <input id="jenisLainLainText_k" class="form-control" placeholder="Sila nyatakan jenis kenamaan" />
+                    </div>
                   </div>
               <div class="form-row two-col">
                 <div class="form-group">
@@ -196,22 +220,22 @@
               </div>
 
               <div class="divider"></div>
-              <h4><i class="fas fa-user"></i> Maklumat Penghubung</h4>
+              <h4><i class="fas fa-user"></i> Maklumat Pemohon</h4>
 
               <div class="form-row">
                 <div class="form-group">
-                  <label>Nama Penghubung *</label>
+                  <label>Nama Pemohon *</label>
                   <input id="namaPenghubung_k" class="form-control" placeholder="Nama pegawai / guru" />
                 </div>
               </div>
 
               <div class="form-row two-col">
                 <div class="form-group">
-                  <label>Email Penghubung *</label>
+                  <label>Email Pemohon *</label>
                   <input id="emailPenghubung_k" class="form-control" type="email" placeholder="email@example.com" />
                 </div>
                 <div class="form-group">
-                  <label>Telefon Penghubung *</label>
+                  <label>Telefon Pemohon *</label>
                   <input id="telefonPenghubung_k" class="form-control" placeholder="0123456789" />
                 </div>
               </div>
@@ -226,11 +250,51 @@
                 </span>
               </h3>
               
+              <!-- DISCLAIMER BOX -->
+              <div style="background: #FEF3C7; border-left: 4px solid #F59E0B; padding: 1.25rem; border-radius: 6px; margin-bottom: 1.5rem;">
+                <div style="display: flex; gap: 1rem;">
+                  <div style="flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle" style="color: #F59E0B; font-size: 1.5rem;"></i>
+                  </div>
+                  <div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: #92400E; font-size: 1rem;">
+                      <strong>PENTING: Had Permohonan</strong>
+                    </h4>
+                    <p style="margin: 0; color: #78350F; font-size: 0.9rem; line-height: 1.6;">
+                      Sistem ini hanya untuk permohonan yang melibatkan:
+                    </p>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem; color: #78350F; font-size: 0.9rem;">
+                      <li><strong>1 sekolah sahaja</strong></li>
+                      <li><strong>1 daerah sahaja</strong></li>
+                      <li><strong>1 negeri (Pahang) sahaja</strong></li>
+                    </ul>
+                    <p style="margin: 0.75rem 0 0 0; color: #92400E; font-size: 0.9rem;">
+                      <strong>Sekiranya permohonan melibatkan lebih daripada satu sekolah, daerah, atau campuran,</strong> 
+                      sila hantar permohonan secara manual ke:
+                    </p>
+                    <div style="background: #FFFBEB; padding: 0.75rem; border-radius: 4px; margin-top: 0.5rem;">
+                      <p style="margin: 0; color: #78350F; font-size: 0.85rem; font-weight: 600;">
+                        <i class="fas fa-envelope"></i> Unit Swasta<br>
+                        <i class="fas fa-building"></i> Sektor Pengurusan Sekolah, JPN Pahang
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <!-- Section 1: Maklumat Sekolah -->
               <div class="form-row">
                 <div class="form-group">
                   <label>Kod Sekolah *</label>
-                  <input id="kodSekolah_p" class="form-control" placeholder="Contoh: CBA0001" />
+                  <div style="display: flex; gap: 0.5rem;">
+                    <input id="kodSekolah_p" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
+                    <button type="button" class="btn-secondary" onclick="openSchoolLookup('p')" style="white-space: nowrap;">
+                      <i class="fas fa-search"></i> Cari
+                    </button>
+                  </div>
+                  <small style="color: #666; font-size: 0.85rem;">
+                    <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
+                  </small>
                 </div>
               </div>
 
@@ -330,7 +394,18 @@
                     <option value="GELANGGANG PERMAINAN">GELANGGANG PERMAINAN</option>
                     <option value="PADANG">PADANG</option>
                     <option value="ASRAMA">ASRAMA</option>
+                    <option value="KANTIN">KANTIN</option>
+                    <option value="BILIK GERAKAN">BILIK GERAKAN</option>
+                    <option value="LAIN-LAIN">LAIN-LAIN</option>
                   </select>
+                </div>
+              </div>
+              
+              <!-- Field for Fasiliti Lain-lain -->
+              <div class="form-row" id="fasilitiLainLain_p" style="display:none;">
+                <div class="form-group">
+                  <label>Nyatakan Nama Fasiliti *</label>
+                  <input id="fasilitiLainLainText_p" class="form-control" placeholder="Sila nyatakan nama fasiliti" />
                 </div>
               </div>
             
@@ -342,22 +417,22 @@
               </div>
             
               <div class="divider"></div>
-              <h4><i class="fas fa-phone"></i> Maklumat Penghubung</h4>
+              <h4><i class="fas fa-phone"></i> Maklumat Pemohon</h4>
             
               <div class="form-row">
                 <div class="form-group">
-                  <label>Nama Penghubung *</label>
+                  <label>Nama Pemohon *</label>
                   <input id="namaPenghubung_p" class="form-control" placeholder="Nama untuk dihubungi" />
                 </div>
               </div>
             
               <div class="form-row two-col">
                 <div class="form-group">
-                  <label>Email Penghubung *</label>
+                  <label>Email Pemohon *</label>
                   <input id="emailPenghubung_p" class="form-control" type="email" placeholder="email@example.com" />
                 </div>
                 <div class="form-group">
-                  <label>Telefon Penghubung *</label>
+                  <label>Telefon Pemohon *</label>
                   <input id="telefonPenghubung_p" class="form-control" placeholder="0123456789" />
                 </div>
               </div>
@@ -373,10 +448,18 @@
             </h3>
   
             <!-- Maklumat Sekolah -->
-            <div class="form-row">
+           <div class="form-row">
               <div class="form-group">
               <label>Kod Sekolah *</label>
-              <input id="kodSekolah_a" class="form-control" placeholder="Contoh: CBA0001" />
+              <div style="display: flex; gap: 0.5rem;">
+                <input id="kodSekolah_a" class="form-control" placeholder="Contoh: CBA0001" autocomplete="off" style="flex: 1;" />
+                <button type="button" class="btn-secondary" onclick="openSchoolLookup('a')" style="white-space: nowrap;">
+                  <i class="fas fa-search"></i> Cari
+                </button>
+              </div>
+              <small style="color: #666; font-size: 0.85rem;">
+                <i class="fas fa-info-circle"></i> Tidak tahu kod sekolah? Klik butang "Cari"
+              </small>
               </div>
             </div>
 
@@ -404,7 +487,7 @@
   <div class="form-row">
     <div class="form-group">
       <label>Nama Jabatan/Agensi *</label>
-      <input id="namaJabatanAgensi_a" class="form-control" placeholder="Contoh: Jabatan Pendidikan Negeri Pahang" />
+      <input id="namaJabatanAgensi_a" class="form-control" placeholder="Contoh: Jabatan Kerajaan / Agensi Luar / NGO" />
     </div>
   </div>
 
@@ -498,7 +581,7 @@
       </div>
     </div>
   <div class="divider"></div>
-  <h4><i class="fas fa-user"></i> Maklumat Pemohon (Pegawai Agensi)</h4>
+  <h4><i class="fas fa-user"></i> Maklumat Pemohon</h4>
 
   <div class="form-row">
     <div class="form-group">
@@ -529,25 +612,58 @@
             <!-- ========== BAHAGIAN UPLOAD FAIL ========== -->
             <div class="divider"></div>
             <h3 style="color:#D4AF37; margin-top:30px;"><i class="fas fa-paperclip"></i> Muat Naik Dokumen </h3>
-            <p class="note">Anda perlu muat naik sehingga 3 fail PDF untuk permohonan anda.</p>
-            <p class="note warning">⚠️ Saiz PDF maksimum 5MB sahaja.</p>
+            <p class="note">Anda perlu muat naik dokumen berkenaan.</p>
+            <p class="note warning">⚠️ Saiz PDF maksimum 5MB bagi setiap dokumen.</p>
 
-            <div class="file-upload-section">
-              <label>1. Surat Permohonan (PDF)</label>
-              <input type="file" id="fileSurat" accept=".pdf" class="file-input" />
-              <div id="previewSurat" class="file-preview"></div>
+            <!-- KENAMAAN FILES -->
+            <div id="files-kenamaan" class="upload-files-section">
+              <div class="file-upload-section">
+                <label>1. Surat Permohonan (PDF) *</label>
+                <input type="file" id="fileSurat" accept=".pdf" class="file-input" />
+                <div id="previewSurat" class="file-preview"></div>
+              </div>
+
+              <div class="file-upload-section">
+                <label>2. Borang Permohonan (PDF) *</label>
+                <input type="file" id="fileBorang" accept=".pdf" class="file-input" />
+                <div id="previewBorang" class="file-preview"></div>
+              </div>
+
+              <div class="file-upload-section">
+                <label>3. Kertas Cadangan (PDF)</label>
+                <input type="file" id="fileCadangan" accept=".pdf" class="file-input" />
+                <div id="previewCadangan" class="file-preview"></div>
+              </div>
             </div>
 
-            <div class="file-upload-section">
-              <label>2. Borang Permohonan (PDF)</label>
-              <input type="file" id="fileBorang" accept=".pdf" class="file-input" />
-              <div id="previewBorang" class="file-preview"></div>
+            <!-- AGENSI FILES -->
+            <div id="files-agensi" class="upload-files-section" style="display:none;">
+              <div class="file-upload-section">
+                <label>1. Surat Permohonan (PDF) *</label>
+                <input type="file" id="fileSuratAgensi" accept=".pdf" class="file-input" />
+                <div id="previewSuratAgensi" class="file-preview"></div>
+              </div>
+
+              <div class="file-upload-section">
+                <label>2. Kertas Cadangan (PDF)</label>
+                <input type="file" id="fileCadanganAgensi" accept=".pdf" class="file-input" />
+                <div id="previewCadanganAgensi" class="file-preview"></div>
+              </div>
             </div>
 
-            <div class="file-upload-section">
-              <label>3. Kertas Cadangan (PDF)</label>
-              <input type="file" id="fileCadangan" accept=".pdf" class="file-input" />
-              <div id="previewCadangan" class="file-preview"></div>
+            <!-- PREMIS FILES -->
+            <div id="files-premis" class="upload-files-section" style="display:none;">
+              <div class="file-upload-section">
+                <label>1. Surat Permohonan (PDF) *</label>
+                <input type="file" id="fileSuratPremis" accept=".pdf" class="file-input" />
+                <div id="previewSuratPremis" class="file-preview"></div>
+              </div>
+
+              <div class="file-upload-section">
+                <label>2. Kertas Cadangan (PDF)</label>
+                <input type="file" id="fileCadanganPremis" accept=".pdf" class="file-input" />
+                <div id="previewCadanganPremis" class="file-preview"></div>
+              </div>
             </div>
 
             <!-- ========== SUBMIT BUTTON ========== -->
@@ -619,11 +735,45 @@
           </button>
         </div>
 
-        <!-- REFRESH BUTTON -->
-        <div class="filter-bar">
-          <button id="btnRefreshDashboard" class="btn-secondary">
-            <i class="fas fa-sync-alt"></i> Refresh
-          </button>
+        <!-- FILTER & REFRESH -->
+        <div class="filter-bar" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <i class="fas fa-filter"></i> Kategori
+            </label>
+            <select id="filterKategori" class="form-control">
+              <option value="Semua">Semua Kategori</option>
+              <option value="Kenamaan">Kenamaan</option>
+              <option value="Agensi">Agensi</option>
+              <option value="Premis">Premis</option>
+            </select>
+          </div>
+          
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <i class="fas fa-map-marker-alt"></i> Daerah
+            </label>
+            <select id="filterDaerah" class="form-control">
+              <option value="Semua">Semua Daerah</option>
+              <option value="BENTONG">Bentong</option>
+              <option value="BERA">Bera</option>
+              <option value="CAMERON HIGHLANDS">Cameron Highlands</option>
+              <option value="JERANTUT">Jerantut</option>
+              <option value="KUANTAN">Kuantan</option>
+              <option value="LIPIS">Lipis</option>
+              <option value="MARAN">Maran</option>
+              <option value="PEKAN">Pekan</option>
+              <option value="RAUB">Raub</option>
+              <option value="ROMPIN">Rompin</option>
+              <option value="TEMERLOH">Temerloh</option>
+            </select>
+          </div>
+          
+          <div style="flex: 0 0 auto; align-self: flex-end;">
+            <button id="btnRefreshDashboard" class="btn-secondary">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
         </div>
 
         <!-- PEGAWAI SEMAK: 3 TABLES -->
@@ -649,7 +799,71 @@
           <!-- Table will be populated by JavaScript -->
         </div>
       </div>
+<!-- PPD DASHBOARD (Hidden until PPD login) -->
+      <div id="ppd-dashboard" class="dashboard-container" style="display:none;">
+        <div class="dashboard-header">
+          <h2 id="ppd-dashboard-title"><i class="fas fa-map-marker-alt"></i> Dashboard PPD</h2>
+          <button id="btnPpdLogout" class="btn-secondary">
+            <i class="fas fa-sign-out-alt"></i> Log Keluar
+          </button>
+        </div>
 
+        <!-- PPD Filter Bar -->
+        <div class="filter-bar" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <i class="fas fa-filter"></i> Kategori
+            </label>
+            <select id="ppdFilterKategori" class="form-control">
+              <option value="Semua">Semua Kategori</option>
+              <option value="Kenamaan">Kenamaan</option>
+              <option value="Agensi">Agensi</option>
+              <option value="Premis">Premis</option>
+            </select>
+          </div>
+          
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+              <i class="fas fa-tasks"></i> Status
+            </label>
+            <select id="ppdFilterStatus" class="form-control">
+              <option value="Semua">Semua Status</option>
+              <option value="Baru">Baru</option>
+              <option value="Query">Query</option>
+              <option value="Disahkan">Disahkan</option>
+              <option value="Lulus">Lulus</option>
+              <option value="Tolak">Ditolak</option>
+            </select>
+          </div>
+          
+          <div style="flex: 0 0 auto; align-self: flex-end;">
+            <button id="btnPpdRefresh" class="btn-secondary">
+              <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- PPD Statistics Cards -->
+        <div id="ppd-stats-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- PPD Category Breakdown -->
+        <div style="margin-bottom: 2rem;">
+          <h3 style="color: #D4AF37; margin-bottom: 1rem;">
+            <i class="fas fa-layer-group"></i> Permohonan Mengikut Kategori
+          </h3>
+          <div id="ppd-category-breakdown"></div>
+        </div>
+
+        <!-- PPD Applications Table -->
+        <div>
+          <h3 style="color: #D4AF37; margin-bottom: 1rem;">
+            <i class="fas fa-list"></i> Senarai Permohonan Terkini
+          </h3>
+          <div id="ppd-applications-table"></div>
+        </div>
+      </div>
     </div>
 
     <!-- ==================== TAB 3: QUERY ==================== -->
@@ -773,7 +987,106 @@
 </div>
 
   </div>
+<!-- ==================== TAB 5: ANALISIS ==================== -->
+    <div id="tab-analisis" class="tab-content">
+      <div class="content-card">
+        <h2><i class="fas fa-chart-bar"></i> Dashboard Analisis</h2>
+        <p class="note">Statistik ringkas permohonan dalam sistem.</p>
 
+        <!-- Statistics Cards -->
+        <div id="statsCards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Breakdown by Category -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #D4AF37; margin-bottom: 1rem;">
+            <i class="fas fa-layer-group"></i> Permohonan Mengikut Kategori
+          </h3>
+          <div id="categoryBreakdown"></div>
+        </div>
+
+        <!-- Breakdown by District -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #D4AF37; margin-bottom: 1rem;">
+            <i class="fas fa-map-marked-alt"></i> Permohonan Mengikut Daerah
+          </h3>
+          <div id="districtBreakdown"></div>
+        </div>
+
+        <!-- Breakdown by Status -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #D4AF37; margin-bottom: 1rem;">
+            <i class="fas fa-tasks"></i> Permohonan Mengikut Status
+          </h3>
+          <div id="statusBreakdown"></div>
+        </div>
+
+        <button id="btnRefreshAnalysis" class="btn-primary" style="margin-top: 2rem;">
+          <i class="fas fa-sync-alt"></i> Refresh Data
+        </button>
+      </div>
+    </div>
+
+  </div>
+  <!-- SCHOOL LOOKUP MODAL -->
+<div id="schoolLookupModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto;">
+  <div style="max-width: 800px; margin: 50px auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+    
+    <!-- Header -->
+    <div style="background: #D4AF37; color: white; padding: 1.5rem; border-radius: 10px 10px 0 0; display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="margin: 0;"><i class="fas fa-search"></i> Cari Sekolah</h3>
+      <button onclick="closeSchoolLookup()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+    </div>
+    
+    <!-- Search & Filters -->
+    <div style="padding: 1.5rem; border-bottom: 1px solid #E5E7EB;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            <i class="fas fa-map-marker-alt"></i> Daerah
+          </label>
+          <select id="lookupFilterDaerah" class="form-control" onchange="filterSchools()">
+            <option value="">Semua Daerah</option>
+          </select>
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+            <i class="fas fa-graduation-cap"></i> Peringkat
+          </label>
+          <select id="lookupFilterPeringkat" class="form-control" onchange="filterSchools()">
+            <option value="">Semua Peringkat</option>
+            <option value="RENDAH">Rendah</option>
+            <option value="MENENGAH">Menengah</option>
+          </select>
+        </div>
+      </div>
+      
+      <div>
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+          <i class="fas fa-school"></i> Cari Nama Sekolah
+        </label>
+        <input type="text" id="lookupSearchName" class="form-control" placeholder="Taip nama sekolah..." onkeyup="filterSchools()" />
+      </div>
+      
+      <div style="margin-top: 1rem; padding: 0.75rem; background: #FEF3C7; border-left: 4px solid #F59E0B; border-radius: 4px;">
+        <small style="color: #92400E;">
+          <i class="fas fa-info-circle"></i> <strong>Jumlah:</strong> <span id="lookupCount">0</span> sekolah dijumpai
+        </small>
+      </div>
+    </div>
+    
+    <!-- Results Table -->
+    <div style="padding: 1.5rem; max-height: 400px; overflow-y: auto;">
+      <div id="lookupResults">
+        <p style="text-align: center; color: #666;">Memuatkan senarai sekolah...</p>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+<!-- FOOTER -->
   <!-- FOOTER -->
   <footer class="main-footer">
     <p>&copy; 2025 Sektor Pengurusan Sekolah. Semua hak cipta terpelihara.</p>
@@ -784,6 +1097,7 @@
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/forms.js"></script>
+  <script src="js/analisis.js"></script>
   <script src="js/tabs.js"></script>
   <script src="js/pegawai.js"></script>
   <script src="js/semak.js"></script>
@@ -792,6 +1106,7 @@
   <script src="js/download.js"></script>
 </body>
 </html>
+
 
 
 
