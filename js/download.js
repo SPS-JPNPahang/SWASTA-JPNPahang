@@ -6,7 +6,8 @@ whenReady(() => {
     spi_bil4_2023: '1KsmPeig_P7RgkMgSxOd4-B2gmL-AhCFR',
     spi_bil7_1991: '1UUPH8zo4V123JQzu6xYj4_lWVKHqh8ZW',
     spi_bil5_2018: '1hTzryGiUoWzqGdiJEUeki85qVhQqw532',
-    spi_bil12_1988: '1r8KjPw3B_a9ZAuLUAQPL4wEYLO6cLBeC'
+    spi_bil12_1988: '1r8KjPw3B_a9ZAuLUAQPL4wEYLO6cLBeC',
+    bk_ap: '1FpcgMpTpd3-wdgbCNNHqdaBaePkH3BEd'
   };
 
   // ⭐ FILE INFO
@@ -14,7 +15,8 @@ whenReady(() => {
     spi_bil4_2023: { title: 'SPI Bil. 4/2023' },
     spi_bil7_1991: { title: 'SPI Bil. 7/1991' },
     spi_bil5_2018: { title: 'SPI Bil. 5/2018' },
-    spi_bil12_1988: { title: 'SPI Bil. 12/1988' }
+    spi_bil12_1988: { title: 'SPI Bil. 12/1988' },
+    bk_ap: { title : 'Borang Permohonan'}
   };
 
   // ⭐ PREVIEW FUNCTION (Opens in browser)
@@ -78,6 +80,7 @@ whenReady(() => {
   console.log('✅ download.js loaded - Both functions ready!');
 
 }); // End whenReady
+
 
 
 
