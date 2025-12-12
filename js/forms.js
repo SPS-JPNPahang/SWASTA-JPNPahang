@@ -457,7 +457,6 @@ function collectFormData(kategori) {
   data.hariProgramMula = document.getElementById('hariProgramMula_a').value.trim();
   data.tarikhProgramTamat = document.getElementById('tarikhProgramTamat_a').value;
   data.hariProgramTamat = document.getElementById('hariProgramTamat_a').value.trim();
-  data.jawatanKetua = document.getElementById('jawatanKetua_a').value;
   
   // Rujukan Surat (Column AD-AE)
   data.noRujSuratPemohon = document.getElementById('noRujSuratPemohon_a').value.trim();
@@ -666,3 +665,4 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
