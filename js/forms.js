@@ -203,52 +203,39 @@ function wireAutofill(prefix) {
 
     /* ===== TOGGLE KENAMAAN FIELDS BASED ON JENIS ===== */
     const jenisKenamaanEl = document.getElementById('jenisKenamaan_k');
-    if (jenisKenamaanEl) {
-      jenisKenamaanEl.addEventListener('change', function() {
-        const jenis = this.value;
-        const perasmiDiv = document.getElementById('perasmiFields_k');
-        const penceramahDiv = document.getElementById('penceramahFields_k');
-        
-        if (jenis === 'Perasmi') {
-          perasmiDiv.style.display = 'block';
-          penceramahDiv.style.display = 'none';
-          
-          // Set required
-          document.getElementById('namaPerasmi_k').required = true;
-          document.getElementById('jawatanPerasmi_k').required = true;
-          document.getElementById('namaPenceramah_k').required = false;
-          document.getElementById('jawatanPenceramah_k').required = false;
-          
-          // Clear penceramah fields
-          document.getElementById('namaPenceramah_k').value = '';
-          document.getElementById('jawatanPenceramah_k').value = '';
-          
-        } else if (jenis === 'Penceramah') {
-          perasmiDiv.style.display = 'none';
-          penceramahDiv.style.display = 'block';
-          
-          // Set required
-          document.getElementById('namaPerasmi_k').required = false;
-          document.getElementById('jawatanPerasmi_k').required = false;
-          document.getElementById('namaPenceramah_k').required = true;
-          document.getElementById('jawatanPenceramah_k').required = true;
-          
-          // Clear perasmi fields
-          document.getElementById('namaPerasmi_k').value = '';
-          document.getElementById('jawatanPerasmi_k').value = '';
-          
-        } else {
-          perasmiDiv.style.display = 'none';
-          penceramahDiv.style.display = 'none';
-          
-          // Show/hide Lain-lain field
-          const lainLainDiv = document.getElementById('jenisLainLain_k');
-          if (lainLainDiv) {
-            lainLainDiv.style.display = (jenis === 'Lain-lain') ? 'block' : 'none';
-          }
-        }
-      });
+if (jenisKenamaanEl) {
+  jenisKenamaanEl.addEventListener('change', function() {
+    const jenis = this.value;
+    
+    const labelNama = document.getElementById('labelNama_k');
+    const labelJawatan = document.getElementById('labelJawatan_k');
+    
+    if (labelNama && labelJawatan) {
+      if (jenis === 'Perasmi') {
+        labelNama.textContent = 'Nama Perasmi *';
+        labelJawatan.textContent = 'Jawatan Perasmi *';
+      } else if (jenis === 'Penceramah') {
+        labelNama.textContent = 'Nama Penceramah *';
+        labelJawatan.textContent = 'Jawatan Penceramah *';
+      } else if (jenis === 'Undangan') {
+        labelNama.textContent = 'Nama Tetamu *';
+        labelJawatan.textContent = 'Jawatan Tetamu *';
+      } else if (jenis === 'Tetamu') {
+        labelNama.textContent = 'Nama Tetamu *';
+        labelJawatan.textContent = 'Jawatan Tetamu *';
+      } else if (jenis === 'Penyumbang') {
+        labelNama.textContent = 'Nama Penyumbang *';
+        labelJawatan.textContent = 'Jawatan Penyumbang *';
+      } else if (jenis === 'Lawatan') {
+        labelNama.textContent = 'Nama Wakil *';
+        labelJawatan.textContent = 'Jawatan Wakil *';
+      } else {
+        labelNama.textContent = 'Nama *';
+        labelJawatan.textContent = 'Jawatan *';
+      }
     }
+  });
+}
 /* ===== FASILITI PREMIS HANDLER ===== */
 const namaFasilitiEl = document.getElementById('namaFasiliti_p');
 if (namaFasilitiEl) {
@@ -401,10 +388,7 @@ function collectFormData(kategori) {
   
   if (kategori === 'Kenamaan') {
   data.kodSekolah = norm(document.getElementById('kodSekolah_k').value);
-  const jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
-  data.jenisKenamaan = (jenisKenamaan === 'Lain-lain') 
-    ? document.getElementById('jenisLainLainText_k').value 
-    : jenisKenamaan;
+  data.jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
   data.poskod = document.getElementById('poskod_k').value.trim();
   data.jawatanKetua = document.getElementById('jawatanKetua_k').value;
   data.tarikhProgram = document.getElementById('tarikhProgram_k').value;
@@ -413,14 +397,9 @@ function collectFormData(kategori) {
   data.lokasi = document.getElementById('lokasi_k').value.trim();
   data.namaProgram = document.getElementById('namaProgram_k').value.trim();
   
-  // Conditional fields based on jenis
-  if (data.jenisKenamaan === 'Perasmi') {
-    data.namaPerasmi = document.getElementById('namaPerasmi_k').value.trim();
-    data.jawatanPerasmi = document.getElementById('jawatanPerasmi_k').value.trim();
-  } else if (data.jenisKenamaan === 'Penceramah') {
-    data.namaPenceramah = document.getElementById('namaPenceramah_k').value.trim();
-    data.jawatanPenceramah = document.getElementById('jawatanPenceramah_k').value.trim();
-  }
+ // All jenis use same fields
+  data.namaPerasmi = document.getElementById('namaOrang_k').value.trim();
+  data.jawatanPerasmi = document.getElementById('jawatanOrang_k').value.trim();
   
   data.namaPenghubung = document.getElementById('namaPenghubung_k').value.trim();
   data.emailPenghubung = document.getElementById('emailPenghubung_k').value.trim();
@@ -687,15 +666,3 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
-
-
-
-
-
-
-
-
-
-
-
-
