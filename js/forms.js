@@ -400,6 +400,7 @@ function collectFormData(kategori) {
   const data = { kategori: kategori };
   
   if (kategori === 'Kenamaan') {
+  data.kodSekolah = norm(document.getElementById('kodSekolah_k').value);
   const jenisKenamaan = document.getElementById('jenisKenamaan_k').value;
   data.jenisKenamaan = (jenisKenamaan === 'Lain-lain') 
     ? document.getElementById('jenisLainLainText_k').value 
@@ -686,6 +687,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
