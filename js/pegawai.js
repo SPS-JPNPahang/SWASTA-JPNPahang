@@ -406,8 +406,11 @@ function buildTableHtml(items, role, statusLabel) {
   `;
 
   items.forEach(app => {
-    // Check for Link Surat
-    const linkSurat = app.SuratURL 
+    // Check for Link Surat - ONLY show for Lulus/Tolak status
+    const statusLower = String(app.Status || '').toLowerCase();
+    const showLinkSurat = (statusLower === 'lulus' || statusLower === 'tolak') && app.SuratURL;
+    
+    const linkSurat = showLinkSurat
       ? `<a href="${app.SuratURL}" target="_blank" class="btn-table btn-view" style="font-size:0.9rem;">
           <i class="fas fa-file-pdf"></i> Lihat
          </a>`
@@ -971,7 +974,108 @@ async function tolakPremis(requestId) {
     Swal.fire('Ralat', 'Tidak dapat berhubung dengan server', 'error');
   }
 }
+/* ========================= SEMAK → TOLAK AGENSI ========================== */
+async function tolakAgensi(requestId) {
+  const { value: formValues } = await Swal.fire({
+    title: 'Tolak Permohonan Agensi',
+    html: `
+      <div style="text-align:left; padding:1rem;">
+        <label style="display:block; margin-bottom:0.5rem; font-weight:600;">Jilid *</label>
+        <input id="tjilid" class="swal2-input" type="text" placeholder="Contoh: 1" style="margin-top:0;">
+        
+        <label style="display:block; margin-bottom:0.5rem; margin-top:1rem; font-weight:600;">Bil Surat *</label>
+        <input id="tbil" class="swal2-input" type="text" placeholder="Contoh: 100/2025" style="margin-top:0;">
+        
+        <label style="display:block; margin-bottom:0.5rem; margin-top:1rem; font-weight:600;">Tarikh Surat *</label>
+        <input id="ttarikh" class="swal2-input" type="date" style="margin-top:0;">
+        
+        <label style="display:block; margin-bottom:0.5rem; margin-top:1rem; font-weight:600; color:#EF4444;">
+          Sebab Penolakan *
+        </label>
+        <textarea id="sebab_tolak" class="swal2-textarea" placeholder="Nyatakan sebab penolakan dengan jelas..." 
+          style="width:100%; min-height:120px; margin-top:0;"></textarea>
+        <small style="color:#666;">Sebab ini akan dimasukkan dalam surat penolakan</small>
+      </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Tolak Permohonan',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#EF4444',
+    preConfirm: () => {
+      const jilid = document.getElementById('tjilid').value.trim();
+      const bilSurat = document.getElementById('tbil').value.trim();
+      const tarikhSurat = document.getElementById('ttarikh').value;
+      const sebabPenolakan = document.getElementById('sebab_tolak').value.trim();
 
+      if (!jilid || !bilSurat || !tarikhSurat) {
+        Swal.showValidationMessage('Jilid, Bil Surat dan Tarikh Surat diperlukan!');
+        return false;
+      }
+
+      if (!sebabPenolakan) {
+        Swal.showValidationMessage('Sebab penolakan diperlukan!');
+        return false;
+      }
+
+      if (sebabPenolakan.length < 10) {
+        Swal.showValidationMessage('Sila nyatakan sebab penolakan dengan lebih jelas (minimum 10 aksara)');
+        return false;
+      }
+
+      return { jilid, bilSurat, tarikhSurat, sebabPenolakan };
+    }
+  });
+
+  if (!formValues) return;
+
+  const confirm = await Swal.fire({
+    title: 'Sahkan Penolakan?',
+    text: 'Permohonan ini akan ditolak dan dihantar ke TP',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Ya, Tolak',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#EF4444'
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  Swal.fire({
+    title: 'Memproses penolakan...',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading()
+  });
+
+  try {
+    const response = await fetch(GAS_POST, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'tolakAgensi',
+        requestId,
+        jilid: formValues.jilid,
+        bilSurat: formValues.bilSurat,
+        tarikhSurat: formValues.tarikhSurat,
+        sebabPenolakan: formValues.sebabPenolakan
+      })
+    });
+
+    const res = await response.json();
+
+    if (res.success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Permohonan Ditolak',
+        text: 'Telah dihantar ke Timbalan Pengarah untuk kelulusan',
+        confirmButtonColor: '#D4AF37'
+      });
+      loadApplications();
+    } else {
+      Swal.fire('Ralat', res.message || 'Gagal menolak permohonan', 'error');
+    }
+  } catch (err) {
+    Swal.fire('Ralat', 'Tidak dapat berhubung dengan server', 'error');
+  }
+}
 /* ========================= LULUS / TOLAK ========================== */
 async function approveLetter(requestId, action) {
   const txt = action === 'Lulus' ? 'Luluskan' : 'Tolak';
@@ -1094,6 +1198,7 @@ async function bulkApprove() {
     window.sendQuery = sendQuery;
     window.viewApplicationDetails = viewApplicationDetails;
     window.tolakPremis = tolakPremis;
+    window.tolakAgensi = tolakAgensi;
     window.approveLetter = approveLetter;
     window.bulkApprove = bulkApprove;
 /* ========================= PPD DASHBOARD ========================== */
@@ -1333,118 +1438,6 @@ function displayPpdApplicationsTable(data) {
   tableDiv.innerHTML = html;
 }
 
-/* ========================= TOLAK AGENSI ========================== */
-window.tolakAgensi = async function(requestId) {
-  const { value: formValues } = await Swal.fire({
-    title: 'Tolak Permohonan Agensi',
-    html: `
-      <div style="text-align: left;">
-        <p style="margin-bottom: 1rem; color: #666;">
-          <i class="fas fa-info-circle"></i> Masukkan maklumat surat penolakan
-        </p>
-        
-        <div style="margin-bottom: 1rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
-            Jilid Surat *
-          </label>
-          <input id="jilid-agensi" class="swal2-input" placeholder="Contoh: JPN.PHG(SPS)" style="width: 90%;">
-        </div>
-        
-        <div style="margin-bottom: 1rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
-            Bilangan Surat *
-          </label>
-          <input id="bilSurat-agensi" class="swal2-input" placeholder="Contoh: 1234" style="width: 90%;">
-        </div>
-        
-        <div style="margin-bottom: 1rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
-            Tarikh Surat *
-          </label>
-          <input id="tarikhSurat-agensi" type="date" class="swal2-input" style="width: 90%;">
-        </div>
-        
-        <div style="margin-bottom: 1rem;">
-          <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
-            Sebab Penolakan *
-          </label>
-          <textarea id="sebabPenolakan-agensi" class="swal2-textarea" placeholder="Nyatakan sebab permohonan ditolak..." style="width: 90%; min-height: 100px;"></textarea>
-        </div>
-      </div>
-    `,
-    focusConfirm: false,
-    showCancelButton: true,
-    confirmButtonText: '<i class="fas fa-paper-plane"></i> Hantar Penolakan',
-    cancelButtonText: 'Batal',
-    confirmButtonColor: '#EF4444',
-    cancelButtonColor: '#6B7280',
-    width: '600px',
-    preConfirm: () => {
-      const jilid = document.getElementById('jilid-agensi').value;
-      const bilSurat = document.getElementById('bilSurat-agensi').value;
-      const tarikhSurat = document.getElementById('tarikhSurat-agensi').value;
-      const sebabPenolakan = document.getElementById('sebabPenolakan-agensi').value;
-      
-      if (!jilid || !bilSurat || !tarikhSurat || !sebabPenolakan) {
-        Swal.showValidationMessage('Sila lengkapkan semua maklumat');
-        return false;
-      }
-      
-      return { jilid, bilSurat, tarikhSurat, sebabPenolakan };
-    }
-  });
-  
-  if (formValues) {
-    try {
-      Swal.fire({
-        title: 'Menghantar penolakan...',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
-      });
-      
-      const response = await fetch(GAS_POST, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'tolakAgensi',
-          requestId: requestId,
-          jilid: formValues.jilid,
-          bilSurat: formValues.bilSurat,
-          tarikhSurat: formValues.tarikhSurat,
-          sebabPenolakan: formValues.sebabPenolakan
-        })
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Berjaya Ditolak',
-          text: 'Surat penolakan telah dihantar ke agensi.',
-          confirmButtonColor: '#D4AF37'
-        }).then(() => {
-          loadApplications();
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Ralat',
-          text: result.message || 'Gagal menolak permohonan',
-          confirmButtonColor: '#D4AF37'
-        });
-      }
-      
-    } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Ralat',
-        text: 'Tidak dapat berhubung dengan server',
-        confirmButtonColor: '#D4AF37'
-      });
-    }
-  }
-}
 
 }); // End safeRun('pegawai-login')
 }); // End whenReady
-
