@@ -243,8 +243,12 @@ window.viewApplication = async function(requestId) {
     const response = await fetch(url);
     const result = await response.json();
     
-    if (result && result.success && result.data) {
-      showApplicationDetails(result.data);
+   if (result && result.success && result.data) {
+  const app = Array.isArray(result.data)
+    ? result.data[0]
+    : result.data;
+
+      showApplicationDetails(app);
     } else {
       Swal.fire({
         icon: 'error',
@@ -253,6 +257,7 @@ window.viewApplication = async function(requestId) {
         confirmButtonColor: '#D4AF37'
       });
     }
+
     
   } catch (error) {
     console.error('View error:', error);
@@ -298,3 +303,4 @@ function showApplicationDetails(data) {
 
   }); // End safeRun
 }); // End whenReady
+
