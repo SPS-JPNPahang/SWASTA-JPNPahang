@@ -563,6 +563,10 @@ if (kategori === 'Kenamaan') {
           <p>Permohonan anda telah berjaya dihantar.</p>
           <p><strong>Request ID:</strong> <span style="color:#D4AF37; font-size:1.5rem;">${result.requestId}</span></p>
           <p style="font-size:0.9rem; color:#666;">Sila simpan Request ID ini untuk semakan status.</p>
+          <p style="margin-top:0.75rem; font-size:0.9rem; color:#92400E;">
+            E-mel pengesahan telah dihantar ke alamat e-mel yang diisi dalam borang.
+            Sila periksa <strong>"Inbox"</strong> atau <strong>"Spam"</strong>.
+          </p>
         `,
         confirmButtonColor: '#D4AF37',
         confirmButtonText: 'OK'
@@ -665,4 +669,5 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
