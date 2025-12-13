@@ -36,62 +36,37 @@ async function searchQuery() {
   });
 
   try {
-    // Try Request ID first
-    let response = await fetch(buildGET('getRequest', { requestId: input }));
-    let result = await response.json();
+    // Try Request ID OR Kod Sekolah (backend auto detect)
+let response = await fetch(buildGET('getRequest', { requestId: input }));
+let result = await response.json();
 
-    if (result.success && result.data && String(result.data.Status).toLowerCase() === 'query') {
-      Swal.close();
-      
-      // MERGE data from Master for Catatan
-      const masterResponse = await fetch(buildGET('listMaster'));
-      const masterResult = await masterResponse.json();
-      
-      if (masterResult.success && masterResult.data) {
-        const masterData = masterResult.data.find(m => m.RequestID === result.data.RequestID);
-        if (masterData && masterData.Catatan) {
-          result.data.CatatanPegawai = masterData.Catatan;
-        }
-      }
-      
-      displayQueryResults([result.data]);
-      return;
-    }
+Swal.close();
 
-    // Try Kod Sekolah
-    response = await fetch(buildGET('listBySchool', { kodSekolah: input }));
-    result = await response.json();
+if (result.success && result.data) {
 
-    Swal.close();
+  // 🔑 NORMALISE: pastikan SENTIASA array
+  const apps = Array.isArray(result.data) ? result.data : [result.data];
 
-    if (result.success && result.data) {
-      const queryApps = result.data.filter(app => 
-        String(app.Status || '').toLowerCase() === 'query'
-      );
+  // 🔍 FILTER QUERY SAHAJA
+  const queryApps = apps.filter(app =>
+    String(app.Status || '').toLowerCase() === 'query'
+  );
 
-      if (queryApps.length === 0) {
-        queryResultDiv.innerHTML = `
-          <div class="no-data">
-            <i class="fas fa-inbox" style="font-size:3rem; color:#ccc;"></i>
-            <p>Tiada permohonan Query untuk ${input}</p>
-          </div>
-        `;
-        return;
-      }
+  if (queryApps.length === 0) {
+    queryResultDiv.innerHTML = `
+      <div class="no-data">
+        <i class="fas fa-inbox" style="font-size:3rem; color:#ccc;"></i>
+        <p>Tiada permohonan Query untuk ${input}</p>
+      </div>
+    `;
+    return;
+  }
 
-      // MERGE catatan from category sheets
-      for (let app of queryApps) {
-        const detailResponse = await fetch(buildGET('getRequest', { requestId: app.RequestID }));
-        const detailResult = await detailResponse.json();
-        
-        if (detailResult.success && detailResult.data) {
-          app.CatatanPegawai = detailResult.data.CatatanPegawai || detailResult.data.Catatan || '';
-          app.Kategori = detailResult.data.Kategori;
-        }
-      }
-
-      displayQueryResults(queryApps);
-    } else {
+  // ✅ CatatanPegawai sudah datang terus dari borang kategori
+  displayQueryResults(queryApps);
+  return;
+}
+ else {
       queryResultDiv.innerHTML = `
         <div class="no-data">
           <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#ccc;"></i>
@@ -249,4 +224,5 @@ function formatDate(dateStr) {
 }
 window.resubmitQuery = resubmitQuery;
 }); // End safeRun('btnQuerySearch')
+
 }); // End whenReady
