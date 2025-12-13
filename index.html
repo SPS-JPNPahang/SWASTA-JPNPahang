@@ -93,7 +93,7 @@
               
               <div class="form-row">
                 <div class="form-group">
-                  <label>Sekolah *</label>
+                  <label> Kod Sekolah *</label>
                   <input 
                     id="kodSekolah_k" 
                     class="form-control" 
@@ -117,7 +117,7 @@
 
                 <div class="form-row two-col">
                   <div class="form-group">
-                    <label>Daerah</label>
+                    <label>PPD</label>
                     <input id="daerah_k" class="form-control" readonly placeholder="(Akan diisi automatik)"/>
                   </div>
                   <div class="form-group">
@@ -245,7 +245,7 @@
               <!-- Section 1: Maklumat Sekolah -->
               <div class="form-row">
                 <div class="form-group">
-                  <label>Sekolah *</label>
+                  <label>Kod Sekolah *</label>
                   <input 
                     id="kodSekolah_p" 
                     class="form-control" 
@@ -269,7 +269,7 @@
 
               <div class="form-row two-col">
                 <div class="form-group">
-                  <label>Daerah</label>
+                  <label>PPD</label>
                   <input id="daerah_p" class="form-control" readonly placeholder="(Akan diisi automatik)" />
               </div>
                 <div class="form-group">
@@ -440,21 +440,26 @@
             </div>
             <!-- Maklumat Sekolah -->
            <div class="form-row">
-  <div class="form-group">
-    <label>Sekolah *</label>
-    <input 
-      id="kodSekolah_a" 
-      class="form-control" 
-      list="schoolList_a"
-      placeholder="Taip nama sekolah untuk cari..." 
-      autocomplete="off"
-    />
-    <datalist id="schoolList_a"></datalist>
-    <small style="color: #666; font-size: 0.85rem;">
-      <i class="fas fa-info-circle"></i> Taip nama sekolah, sistem akan paparkan pilihan
-    </small>
-  </div>
-</div>
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:6px;">
+              Sekolah / PPD / Negeri *
+              <i class="fas fa-info-circle"
+                 style="color:#D4AF37; cursor:pointer;"
+                 onclick="openPpdInfoModal()"></i>
+            </label>
+            <input 
+              id="kodSekolah_a" 
+              class="form-control" 
+              list="schoolList_a"
+              placeholder="Taip nama sekolah untuk cari..." 
+              autocomplete="off"
+            />
+            <datalist id="schoolList_a"></datalist>
+            <small style="color: #666; font-size: 0.85rem;">
+              <i class="fas fa-info-circle"></i> Taip nama sekolah, sistem akan paparkan pilihan
+            </small>
+          </div>
+        </div>
   <div class="form-row">
     <div class="form-group">
       <label>Nama Sekolah</label>
@@ -464,7 +469,7 @@
 
   <div class="form-row two-col">
     <div class="form-group">
-      <label>Daerah</label>
+      <label>PPD</label>
       <input id="daerah_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
     </div>
     <div class="form-group">
@@ -857,8 +862,15 @@
 
     <div class="semak-form">
       <div class="form-group">
-        <label><i class="fas fa-school"></i> Kod Sekolah</label>
-        <input id="queryKodSekolah" class="form-control" placeholder="Contoh: CBA0001" />
+        <label
+            title="Masukkan Kod Sekolah ATAU Request ID (contoh: CBA0001 atau TCFX840)">
+            <i class="fas fa-question-circle"></i> Kod Sekolah / Request ID
+          </label>
+          
+          <input
+            id="queryKodSekolah"
+            class="form-control"
+            placeholder="Contoh: CBA0001 atau TCFM840" />
       </div>
       <button id="btnQuerySearch" class="btn-primary">
         <i class="fas fa-search"></i> Cari
@@ -1106,8 +1118,51 @@
   <script src="js/agensi.js"></script>
   <script src="js/query.js"></script>
   <script src="js/download.js"></script>
+
+  <!-- MODAL: INFO PPD / NEGERI (AGENSI SAHAJA) -->
+<div id="ppdInfoModal"
+     style="display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,.5); z-index:10000;">
+  <div style="max-width:600px; margin:8vh auto; background:#fff;
+              border-radius:10px; overflow:hidden;">
+    
+    <div style="background:#D4AF37; color:#fff; padding:1rem 1.25rem;
+                display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0;">
+        <i class="fas fa-map-marker-alt"></i> Senarai PPD & Negeri
+      </h3>
+      <button onclick="closePpdInfoModal()"
+              style="background:none; border:none; color:white;
+                     font-size:1.5rem; cursor:pointer;">&times;</button>
+    </div>
+
+    <div style="padding:1.5rem;">
+      <h4>📍 KOD DAERAH (11)</h4>
+      <ul style="columns:2; margin-left:1.2rem; line-height:1.8;">
+        <li>A010 - BENTONG</li>
+        <li>K200 - BERA</li>
+        <li>B020 - CAMERON HIGHLANDS</li>
+        <li>C030 - JERANTUT</li>
+        <li>E050 - KUANTAN</li>
+        <li>D040 - LIPIS</li>
+        <li>J100 - MARAN</li>
+        <li>F060 - PEKAN</li>
+        <li>G070 - RAUB</li>
+        <li>I090 - ROMPIN</li>
+        <li>H080 - TEMERLOH</li>
+      </ul>
+
+      <h4 style="margin-top:1rem;">🏢 KOD NEGERI </h4>
+      <div style="background:#FEF3C7; padding:.75rem; border-radius:6px;">
+        C010 - PAHANG
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
+
 
 
 
