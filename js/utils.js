@@ -72,4 +72,18 @@ function formatDateMY(dateStr, format = 'short') {
   return `${day}/${String(month).padStart(2, '0')}/${year}`;
 }
 
+// ================================
+// MODAL INFO PPD / NEGERI (AGENSI)
+// ================================
+function openPpdInfoModal() {
+  const modal = document.getElementById('ppdInfoModal');
+  if (modal) modal.style.display = 'block';
+}
+
+function closePpdInfoModal() {
+  const modal = document.getElementById('ppdInfoModal');
+  if (modal) modal.style.display = 'none';
+}
+
 console.log('✅ utils.js loaded');
+
