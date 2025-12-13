@@ -29,21 +29,22 @@ btnSemakStatus.addEventListener('click', async () => {
         Swal.showLoading();
       }
     });
-    
-    let url;
-    
-    // 🔑 GUNA SATU LALUAN SAHAJA (backend auto detect)
-    url = buildGET('getRequest', { requestId: searchValue });
-
-    
+        
+    // SEMAK STATUS SENTIASA GUNA MASTER
+    const url = buildGET('listMaster');
     const response = await fetch(url);
     const result = await response.json();
-    
-    Swal.close();
+     Swal.close();
     
     if (result && result.success) {
       // Handle both single result (getRequest) and array (listBySchool)
-      const apps = result.data ? (Array.isArray(result.data) ? result.data : [result.data]) : [];
+      const allApps = Array.isArray(result.data) ? result.data : [];
+
+    const apps = allApps.filter(app =>
+      String(app.RequestID || '').toUpperCase() === searchValue ||
+      String(app.KodSekolah || '').toUpperCase() === searchValue
+    );
+
       
       if (apps.length > 0) {
         displayResults(apps);
@@ -298,5 +299,6 @@ function showApplicationDetails(data) {
 
   }); // End safeRun
 }); // End whenReady
+
 
 
