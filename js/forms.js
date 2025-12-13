@@ -620,7 +620,7 @@ function clearForm(kategori) {
       'jenisKenamaan_k', 'poskod_k', 'jawatanKetua_k', 'tarikhProgram_k', 
       'masaProgram_k', 'hariProgram_k', 'lokasi_k', 'namaProgram_k', 
       'namaPerasmi_k', 'jawatanPerasmi_k', 'namaPenceramah_k', 
-      'jawatanPenceramah_k', 'namaPenghubung_k', 'emailPenghubung_k',
+      'jawatanPenceramah_k','namaOrang_k', 'jawatanOrang_k', 'namaPenghubung_k', 'emailPenghubung_k',
       'telefonPenghubung_k'
     ];
     
@@ -669,5 +669,6 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
