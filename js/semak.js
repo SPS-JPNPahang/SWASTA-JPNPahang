@@ -32,14 +32,9 @@ btnSemakStatus.addEventListener('click', async () => {
     
     let url;
     
-    // ⭐ DETECT: Request ID (ABC12345) or Kod Sekolah (PEA1234)
-    if (/^[A-Z]{3}\d{5}$/.test(searchValue)) {
-      // Request ID format: 3 letters + 5 numbers
-      url = buildGET('getRequest', { requestId: searchValue });
-    } else {
-      // Kod Sekolah
-      url = buildGET('listBySchool', { kodSekolah: searchValue });
-    }
+    // 🔑 GUNA SATU LALUAN SAHAJA (backend auto detect)
+    url = buildGET('getRequest', { requestId: searchValue });
+
     
     const response = await fetch(url);
     const result = await response.json();
@@ -303,4 +298,5 @@ function showApplicationDetails(data) {
 
   }); // End safeRun
 }); // End whenReady
+
 
