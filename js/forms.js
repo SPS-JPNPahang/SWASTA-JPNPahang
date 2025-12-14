@@ -442,7 +442,7 @@ function collectFormData(kategori) {
   data.namaPemohon = document.getElementById('namaPemohon_a').value.trim();
   data.jawatanPemohon = document.getElementById('jawatanPemohon_a').value.trim();
   data.emailPemohon = document.getElementById('emailPemohon_a').value.trim();
-  data.EmailPenghubung = data.emailPemohon;
+  data.emailPenghubung = data.emailPemohon;
   data.telefonPemohon = document.getElementById('telefonPemohon_a').value.trim();
   
   // Jabatan Agensi (Column K-N)
@@ -670,6 +670,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
