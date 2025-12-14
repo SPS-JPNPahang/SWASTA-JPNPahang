@@ -450,6 +450,7 @@ function collectFormData(kategori) {
   data.alamatBaris1 = document.getElementById('alamatBaris1_a').value.trim();
   data.alamatBaris2 = document.getElementById('alamatBaris2_a').value.trim();
   data.poskod = document.getElementById('poskod_a').value.trim();
+  data.daerahAgensi = document.getElementById('daerahAgensi_a').value.trim();
   
   // Program (Column O-U)
   data.tajukSurat = document.getElementById('tajukSurat_a').value.trim();
@@ -670,6 +671,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
