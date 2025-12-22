@@ -151,7 +151,7 @@
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>Poskod *</label>
-                  <input id="poskod_k" class="form-control" placeholder="Poskod" />
+                  <input id="poskod_k" class="form-control" placeholder="Poskod" required />
                 </div>
                 <div class="form-group">
                   <label>Jawatan Ketua *</label>
@@ -184,14 +184,14 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Lokasi *</label>
-                  <input id="lokasi_k" class="form-control" placeholder="Lokasi program" />
+                  <input id="lokasi_k" class="form-control" placeholder="Lokasi program" required />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label>Nama Program *</label>
-                  <input id="namaProgram_k" class="form-control" placeholder="Nama program" />
+                  <input id="namaProgram_k" class="form-control" placeholder="Nama program" required />
                 </div>
               </div>
 
@@ -199,14 +199,14 @@
             <div class="form-row">
               <div class="form-group">
                 <label id="labelNama_k">Nama *</label>
-                <input id="namaOrang_k" class="form-control" placeholder="Nama penuh jemputan" />
+                <input id="namaOrang_k" class="form-control" placeholder="Nama penuh jemputan" required />
               </div>
             </div>
             
             <div class="form-row">
               <div class="form-group">
                 <label id="labelJawatan_k">Jawatan *</label>
-                <input id="jawatanOrang_k" class="form-control" placeholder="Jawatan" />
+                <input id="jawatanOrang_k" class="form-control" placeholder="Jawatan"  required />
               </div>
             </div>
 
@@ -216,18 +216,18 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Nama Pemohon *</label>
-                  <input id="namaPenghubung_k" class="form-control" placeholder="Nama pegawai / guru" />
+                  <input id="namaPenghubung_k" class="form-control" placeholder="Nama pegawai / guru"  required />
                 </div>
               </div>
 
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>Email Pemohon *</label>
-                  <input id="emailPenghubung_k" class="form-control" type="email" placeholder="email@example.com" />
+                  <input id="emailPenghubung_k" class="form-control" type="email" placeholder="email@example.com"  required />
                 </div>
                 <div class="form-group">
                   <label>Telefon Pemohon *</label>
-                  <input id="telefonPenghubung_k" class="form-control" placeholder="0123456789" />
+                  <input id="telefonPenghubung_k" class="form-control" placeholder="0123456789"  required />
                 </div>
               </div>
             </form>
@@ -295,7 +295,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Nama Pemohon *</label>
-                  <input id="namaPemohon_p" class="form-control" placeholder="Nama pemohon" />
+                  <input id="namaPemohon_p" class="form-control" placeholder="Nama pemohon"  required />
                 </div>
               </div>
             
@@ -330,18 +330,18 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Tajuk Surat *</label>
-                  <input id="tajukSurat_p" class="form-control" placeholder="Tajuk surat permohonan" />
+                  <input id="tajukSurat_p" class="form-control" placeholder="Tajuk surat permohonan"  required />
                 </div>
               </div>
             
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>No. Rujukan Surat *</label>
-                  <input id="noRujSurat_p" class="form-control" placeholder="No. rujukan" />
+                  <input id="noRujSurat_p" class="form-control" placeholder="No. rujukan" required />
                 </div>
                 <div class="form-group">
                   <label>Tarikh Surat *</label>
-                  <input id="tarikhSurat_p" class="form-control" type="date" />
+                  <input id="tarikhSurat_p" class="form-control" type="date" required />
                 </div>
               </div>
             
@@ -373,7 +373,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Tarikh Program Laksana *</label>
-                  <input id="tarikhLaksana_p" class="form-control" type="date" />
+                  <input id="tarikhLaksana_p" class="form-control" type="date" required />
                 </div>
               </div>
             
@@ -383,18 +383,18 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Nama Pemohon *</label>
-                  <input id="namaPenghubung_p" class="form-control" placeholder="Nama untuk dihubungi" />
+                  <input id="namaPenghubung_p" class="form-control" placeholder="Nama untuk dihubungi" required />
                 </div>
               </div>
             
               <div class="form-row two-col">
                 <div class="form-group">
                   <label>Email Pemohon *</label>
-                  <input id="emailPenghubung_p" class="form-control" type="email" placeholder="email@example.com" />
+                  <input id="emailPenghubung_p" class="form-control" type="email" placeholder="email@example.com" required />
                 </div>
                 <div class="form-group">
                   <label>Telefon Pemohon *</label>
-                  <input id="telefonPenghubung_p" class="form-control" placeholder="0123456789" />
+                  <input id="telefonPenghubung_p" class="form-control" placeholder="0123456789" required />
                 </div>
               </div>
             </form>
@@ -462,7 +462,7 @@
         </div>
   <div class="form-row">
     <div class="form-group">
-      <label>Nama Sekolah</label>
+      <label>Nama Sekolah /Daerah /Negeri</label>
       <input id="namaSekolah_a" class="form-control" readonly placeholder="(Akan diisi automatik)" />
     </div>
   </div>
@@ -484,7 +484,7 @@
   <div class="form-row">
     <div class="form-group">
       <label>Nama Jabatan/Agensi *</label>
-      <input id="namaJabatanAgensi_a" class="form-control" placeholder="Contoh: Jabatan Kerajaan / Agensi Luar / NGO" />
+      <input id="namaJabatanAgensi_a" class="form-control" placeholder="Contoh: Jabatan Kerajaan / Agensi Luar / NGO" required />
     </div>
   </div>
 
@@ -519,21 +519,21 @@
   <div class="form-row">
     <div class="form-group">
       <label>Tajuk Surat *</label>
-      <input id="tajukSurat_a" class="form-control" placeholder="Contoh: PERMOHONAN MENGADAKAN PROGRAM PEMANTAUAN KUALITI PENDIDIKAN" />
+      <input id="tajukSurat_a" class="form-control" placeholder="Contoh: PERMOHONAN MENGADAKAN PROGRAM PEMANTAUAN KUALITI PENDIDIKAN" required />
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
       <label>Nama Program/Lawatan *</label>
-      <input id="namaProgram_a" class="form-control" placeholder="Contoh: Program Pemantauan Kualiti Pendidikan" />
+      <input id="namaProgram_a" class="form-control" placeholder="Contoh: Program Pemantauan Kualiti Pendidikan" required />
     </div>
   </div>
 
   <div class="form-row two-col">
     <div class="form-group">
       <label>Tarikh Program Mula *</label>
-      <input id="tarikhProgramMula_a" class="form-control" type="date" />
+      <input id="tarikhProgramMula_a" class="form-control" type="date" required />
     </div>
     <div class="form-group">
       <label>Hari Program Mula</label>
@@ -544,7 +544,7 @@
   <div class="form-row two-col">
     <div class="form-group">
       <label>Tarikh Program Tamat *</label>
-      <input id="tarikhProgramTamat_a" class="form-control" type="date" />
+      <input id="tarikhProgramTamat_a" class="form-control" type="date" required />
     </div>
     <div class="form-group">
       <label>Hari Program Tamat</label>
@@ -559,11 +559,11 @@
       <div class="form-row two-col">
     <div class="form-group">
         <label>No. Rujukan Surat Pemohon *</label>
-        <input id="noRujSuratPemohon_a" class="form-control" placeholder="Contoh: JPN.PHG(S)1000/12/2/Jld.5" />
+        <input id="noRujSuratPemohon_a" class="form-control" placeholder="Contoh: JPN.PHG(S)1000/12/2/Jld.5" required />
         </div>
       <div class="form-group">
       <label>Tarikh Surat Pemohon *</label>
-      <input id="tarikhSuratPemohon_a" class="form-control" type="date" />
+      <input id="tarikhSuratPemohon_a" class="form-control" type="date" required />
       </div>
     </div>
   <div class="divider"></div>
@@ -572,25 +572,25 @@
   <div class="form-row">
     <div class="form-group">
       <label>Nama Pemohon *</label>
-      <input id="namaPemohon_a" class="form-control" placeholder="Nama pegawai agensi" />
+      <input id="namaPemohon_a" class="form-control" placeholder="Nama pegawai agensi" required />
     </div>
   </div>
 
   <div class="form-row">
     <div class="form-group">
       <label>Jawatan Pemohon *</label>
-      <input id="jawatanPemohon_a" class="form-control" placeholder="Contoh: Pegawai Penyelaras Program" />
+      <input id="jawatanPemohon_a" class="form-control" placeholder="Contoh: Pegawai Penyelaras Program" required />
     </div>
   </div>
 
   <div class="form-row two-col">
     <div class="form-group">
       <label>Email Pemohon *</label>
-      <input id="emailPemohon_a" class="form-control" type="email" placeholder="email@example.com" />
+      <input id="emailPemohon_a" class="form-control" type="email" placeholder="email@example.com" required />
     </div>
     <div class="form-group">
       <label>Telefon Pemohon *</label>
-      <input id="telefonPemohon_a" class="form-control" placeholder="0123456789" />
+      <input id="telefonPemohon_a" class="form-control" placeholder="0123456789" required />
     </div>
   </div>
 </form>
@@ -1162,6 +1162,7 @@
 
 </body>
 </html>
+
 
 
 
