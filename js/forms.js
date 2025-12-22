@@ -472,6 +472,7 @@ function collectFormData(kategori) {
 document.getElementById('btnSubmit').addEventListener('click', async () => {
   const kategori = kategoriEl.value;
   const data = collectFormData(kategori);
+  if (!document.querySelector('form.active')?.reportValidity()) return;
   
   // Basic validation - Kod Sekolah sahaja
 if (!data.kodSekolah) {
@@ -671,6 +672,7 @@ function clearForm(kategori) {
 
 }); // End safeRun('kategori')
 }); // End whenReady
+
 
 
 
